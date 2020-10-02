@@ -1,7 +1,7 @@
 {
     "port": "COM3",
     "board": "arduino:megaavr:uno2018",
-    "configuration": "mode=on",
     "programmer": "AVR ISP",
-    "sketch": "main.ino"
+    "sketch": "main.ino",
+    "configuration": "mode=off"
 }
