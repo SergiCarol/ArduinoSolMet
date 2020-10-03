@@ -241,8 +241,11 @@ void printWifiData()
 void createAP(void)
 {
   bool wait_for_cinnection = true;
+  String tmp_ssid;
+  String tmp_pwd;
 
-  status = WiFi.beginAP("Arduino AP", "12345");
+  status = WiFi.beginAP("ArduinoAP");
+  Serial.println(status);
   if (status != WL_AP_LISTENING)
   {
     Serial.println("Creating access point failed");
@@ -256,7 +259,9 @@ void createAP(void)
 
   // start the web server on port 80
   ap.begin();
-
+  IPAddress ip;                    // the IP address of your board
+  ip = WiFi.localIP();
+  Serial.println(ip);
   while (wait_for_cinnection)
   {
     WiFiClient client = ap.available(); // listen for incoming clients
@@ -318,6 +323,13 @@ void createAP(void)
           {                   // if you got anything else but a carriage return character,
             currentLine += c; // add it to the end of the currentLine
           }
+          /*
+          if (currentLine.startsWith("GET /?ssid=")){
+            uint8_t start_ssid = currentLine.indexOf("ssid=");
+            uint8_t end_ssid = currentLine.indexOf('&');
+            tmp_ssid = currentLine.substring(start_ssid, end_ssid);
+            Serial.println(tmp_ssid);
+          }*/
         }
       }
       client.stop();
@@ -325,6 +337,8 @@ void createAP(void)
     }
   }
 }
+
+// GET /?ssid=Testssid&pwd=Testpwd&submit=SSID+AND+PWD HTTP/1.1
 
 /* TODO
 char[] listNetworks() {
