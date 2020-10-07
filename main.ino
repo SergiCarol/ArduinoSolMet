@@ -9,7 +9,8 @@
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 #define ONE_WIRE_BUS 3  // Digital pin for water temperature
 #define SensorPin 0     // pH meter Analog output to Arduino Analog Input 0
-
+#define ElectrodesPin 1 // Electrodes Analog input of arduino
+#define VREF 5.0
 // INTERNET CONNECTION INFO
 #define PORT 5000
 #define MAX_RETRY 5
@@ -18,7 +19,7 @@ IPAddress server(192, 168, 1, 36);
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
 String ssid;
 String pwd;
-char api_key[] = "123456789";
+String api_key = "123456789";
 const int capacity = JSON_OBJECT_SIZE(6);
 StaticJsonDocument<capacity> doc;
 WiFiClient client;
@@ -47,6 +48,8 @@ void setup() {
     // Start sensor modules
     dht.begin();
     sensors.begin();
+    pinMode(SensorPin, INPUT);
+    pinMode(ElectrodesPin, INPUT);
 
     clearEEPROM();
     WIFILoadInfo();
@@ -90,7 +93,7 @@ void loop() {
     sensor_data.temperature = result.temperature;
     sensor_data.humidity = result.humidity;
     sensor_data.water_temp = readWaterTemp();
-    sensor_data.water_electrodes = 0;
+    sensor_data.water_electrodes = readElectrodes();
     sensor_data.water_ph = readPH();
 
     sendData(sensor_data);
@@ -123,6 +126,27 @@ void clearEEPROM(void) {
     }
 }
 
+void initServerConnection(void){
+    Serial.println("Initializing Server Connection");
+    Serial.println("Using API KEY= " + api_key);
+    client.connect(server, PORT);
+    client.println("GET /add?api_key=" + api_key + "HTTP/1.0");
+    client.println();
+    Serial.println("Connection successful, awaiting response from server");
+    String currentLine = "";
+     while (client.connected()) {   // loop while the client's connected
+        if (client.available()) {  // if there's bytes to read from the
+                                           // client,
+        char c = client.read();  // read a byte, then
+        Serial.write(c);         // print it out the serial monitor
+
+        if (c == '\n') {
+            currentLine = "";
+        } else if (c != '\r') { 
+            currentLine += c;  // add it to the end of the currentLine
+        }
+}
+
 void sendData(data sensor_data) {
     // Set data to be sent
     doc["temperature"] = sensor_data.temperature;
@@ -148,6 +172,30 @@ void sendData(data sensor_data) {
         serializeJson(doc, client);
         serializeJson(doc, Serial);
     }
+}
+
+float readElectrodes(void) {
+    int analogBuffer[10], tmp;
+    unsigned long int
+        avgValue;  // Store the average value of the sensor feedback
+    float b;
+    float averageVoltage = 0,tdsValue = 0,temperature = 25;
+
+    for (int i = 0; i < 10; i++) {
+        buf[i] = analogRead(ElectrodesPin);
+        delay(10);
+    }
+    avgValue = 0;
+    for (int i = 0; i < 10; i++) {
+        avgValue += buf[i];
+    }
+    avgValue = avgValue / 10;
+    averageVoltage =  avgValue * (float)VREF/ 1024.0;
+    tdsValue=(133.42*averageVoltage*averageVoltage*averageVoltage - 255.86*averageVoltage*averageVoltage + 857.39*averageVoltage)*0.5;
+    Serial.print("TDS Value:");
+    Serial.print(tdsValue,0);
+    Serial.println("ppm");
+    return(tdsValue);
 }
 
 temp_hum readTempHum(void) {
@@ -281,22 +329,32 @@ bool createAP(void) {
                         Serial.println(currentLine);
                         uint8_t start_ssid = currentLine.indexOf("?ssid=");
                         uint8_t end_ssid = currentLine.indexOf('&');
-                        uint8_t start_pwd = currentLine.indexOf("?pwd=");
-                        uint8_t end_pwd = currentLine.indexOf('!');
                         tmp_ssid = 
                             currentLine.substring(start_ssid + 6, end_ssid);
+                        currentLine = currentLine.substring(end_ssid);
+                        uint8_t start_pwd = currentLine.indexOf("?pwd=");
+                        uint8_t end_pwd = currentLine.indexOf('&');
                         tmp_pwd =
                             currentLine.substring(start_pwd + 5, end_pwd);
+                        currentLine = currentLine.substring(end_pwd);
+                        uint8_t start_api = currentLine.indexOf("?api=");
+                        uint8_t end_api = currentLine.indexOf('!');
+                        api_key =
+                            currentLine.substring(start_pwd + 5, end_pwd);
+
                         Serial.print("SSID value = ");
                         Serial.println(tmp_ssid);
                         Serial.print("PWD value = ");
                         Serial.println(tmp_pwd);
+                        Serial.print("API KEY value = ");
+                        Serial.println(api_key);
                         client.stop();
                         WiFi.disconnect();
                         if (!connectNetwork(tmp_ssid,
                                             tmp_pwd)) {
                             return (false);
                         } else {
+                            initServerConnection();
                             return (true);
                         }
                     }
