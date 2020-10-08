@@ -14,13 +14,14 @@
 // INTERNET CONNECTION INFO
 #define PORT 5000
 #define MAX_RETRY 5
+#define UID_LENGTH 16
 IPAddress ip(192, 168, 1, 125);
 IPAddress server(192, 168, 1, 36);
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
 String ssid;
 String pwd;
 String api_key = "123456789";
-const int capacity = JSON_OBJECT_SIZE(6);
+const int capacity = JSON_OBJECT_SIZE(7);
 StaticJsonDocument<capacity> doc;
 WiFiClient client;
 WiFiServer ap(80);
@@ -155,6 +156,7 @@ void sendData(data sensor_data) {
     doc["water_electrodes"] = sensor_data.water_electrodes;
     doc["water_ph"] = sensor_data.water_ph;
     doc["api_key"] = api_key;
+    doc["uid"] = readUID();
 
     // Begin connection
     Serial.println("Attempting to establish connection");
@@ -270,6 +272,20 @@ void WIFIStoreInfo(String ssid_, String pwd_) {
     }
 }
 
+String readUID(void){
+  String tmp_uid;
+  for (uint8_t addr = 100; addr < 100 + UID_LENGTH; addr++) {
+        tmp_uid[addr - 100] = EEPROM.read(addr);
+    }
+    return(tmp_uid);
+}
+
+void writeUID(String UID){
+  for (uint8_t addr = 100; addr < 100 + UID_LENGTH + 2; addr++) {
+        EEPROM.write(addr, UID[addr - 100]);
+    }
+}
+
 void printWifiData() {
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
@@ -363,27 +379,3 @@ bool createAP(void) {
         }
     }
 }
-
-// GET /?ssid=Testssid&pwd=Testpwd&submit=SSID+AND+PWD HTTP/1.1
-
-/* TODO
-char[] listNetworks() {
-  // scan for nearby networks:
-  Serial.println("** Scan Networks **");
-  int numSsid = WiFi.scanNetworks();
-  if (numSsid == -1) {
-    Serial.println("Couldn't get a wifi connection");
-    while (true);
-  }
-
-  // print the list of networks seen:
-  Serial.print("number of available networks:");
-  Serial.println(numSsid);
-
-  char ssids [numSsid]:
-  // print the network number and name for each network found:
-  for (int thisNet = 0; thisNet < numSsid; thisNet++) {
-    ssid[thisNet] = WiFi.SSID(thisNet));
-  }
-  return(ssids)
-}*/
