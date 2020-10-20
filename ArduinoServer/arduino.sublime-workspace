@@ -1,0 +1,1083 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"uSER",
+				"UserMixin\tmodule"
+			],
+			[
+				"use",
+				"user1\tstatement"
+			],
+			[
+				"_",
+				"__\t__magic__"
+			],
+			[
+				"eve",
+				"event3\tstatement"
+			],
+			[
+				"Mod",
+				"ModifyEventView\tclass"
+			],
+			[
+				"get",
+				"get_context_data"
+			],
+			[
+				"ass",
+				"assertEqual"
+			],
+			[
+				"Event",
+				"EventSubscription\tclass"
+			],
+			[
+				"sta",
+				"status_code"
+			],
+			[
+				"Re",
+				"RequestFactory"
+			],
+			[
+				"Mo",
+				"ModifyEventView\tclass"
+			],
+			[
+				"class",
+				"classmethod\tclass"
+			],
+			[
+				"Eve",
+				"Events\tclass"
+			],
+			[
+				"user",
+				"user1\tstatement"
+			],
+			[
+				"Even",
+				"EventSubscription\tclass"
+			],
+			[
+				"email",
+				"EmailField"
+			],
+			[
+				"Modi",
+				"ModifyEvent\tclass"
+			],
+			[
+				"Add",
+				"AddEventView\tclass"
+			],
+			[
+				"templ",
+				"template_name"
+			],
+			[
+				"all",
+				"all_events\tstatement"
+			],
+			[
+				"get_",
+				"get_users_events"
+			],
+			[
+				"pri",
+				"PRIVATE\tstatement"
+			],
+			[
+				"pu",
+				"PUBLISHED\tstatement"
+			],
+			[
+				"card",
+				"card-text"
+			],
+			[
+				"s",
+				"SignUpView\tclass"
+			],
+			[
+				"pars",
+				"parse_args\tfunction"
+			],
+			[
+				"Argu",
+				"ArgumentParser\tclass"
+			],
+			[
+				"is",
+				"iswc\tparam"
+			],
+			[
+				"margin",
+				"margin-left\tproperty"
+			],
+			[
+				"json",
+				"json_response\tstatement"
+			],
+			[
+				"sear",
+				"search_db"
+			],
+			[
+				"isw",
+				"iswc\tstatement"
+			],
+			[
+				"iswc",
+				"iswc_list\tstatement"
+			],
+			[
+				"tYPE",
+				"TypeError\tclass"
+			],
+			[
+				"isc",
+				"iswc_list\tstatement"
+			],
+			[
+				"icw",
+				"icws_list\tparam"
+			],
+			[
+				"find",
+				"find_one\tfunction"
+			],
+			[
+				"list_",
+				"list_collection_names\tfunction"
+			],
+			[
+				"uni",
+				"unique_ids\tstatement"
+			],
+			[
+				"en",
+				"entry\tstatement"
+			],
+			[
+				"ow",
+				"owners_list\tstatement"
+			],
+			[
+				"own",
+				"owner\tstatement"
+			],
+			[
+				"title",
+				"title_first\tstatement"
+			],
+			[
+				"titl",
+				"title_second"
+			],
+			[
+				"if",
+				"ifmain\tif __name__ == '__main__'"
+			],
+			[
+				"no",
+				"Novartis"
+			],
+			[
+				"stu",
+				"studies_count"
+			],
+			[
+				"studi",
+				"studies_count"
+			],
+			[
+				"nct_",
+				"nct_id"
+			],
+			[
+				"conne",
+				"connect_server"
+			],
+			[
+				"install",
+				"install_time\tstatement"
+			],
+			[
+				"instal",
+				"install_time\tstatement"
+			],
+			[
+				"right",
+				"right_on\tparam"
+			],
+			[
+				"left_",
+				"left_on\tparam"
+			],
+			[
+				"dtp",
+				"dtypes\tstatement"
+			],
+			[
+				"min",
+				"min_path"
+			],
+			[
+				"max",
+				"max_path"
+			],
+			[
+				"net",
+				"netSize"
+			],
+			[
+				"wiegt",
+				"weights"
+			],
+			[
+				"path",
+				"path_weight"
+			],
+			[
+				"ma",
+				"mae_50\tstatement"
+			],
+			[
+				"mae",
+				"mae_50\tstatement"
+			],
+			[
+				"p_c",
+				"p_corr_50\tstatement"
+			],
+			[
+				"mse",
+				"mse_14"
+			],
+			[
+				"p_",
+				"p_corr_50\tstatement"
+			],
+			[
+				"p_co",
+				"p_corr_24\tstatement"
+			],
+			[
+				"p_corr",
+				"p_corr_14"
+			],
+			[
+				"con",
+				"continue"
+			],
+			[
+				"ran",
+				"random"
+			],
+			[
+				"ave",
+				"avg_mre_24\tstatement"
+			],
+			[
+				"n_",
+				"n_total\tstatement"
+			],
+			[
+				"pac",
+				"packets_index\tstatement"
+			],
+			[
+				"del",
+				"delay"
+			],
+			[
+				"reco",
+				"record_iterator\tstatement"
+			],
+			[
+				"dela",
+				"delays\tstatement"
+			],
+			[
+				"Y",
+				"y_train\tstatement"
+			],
+			[
+				"X",
+				"X_train\tstatement"
+			],
+			[
+				"test",
+				"test_y\tstatement"
+			],
+			[
+				"data",
+				"dataset\tstatement"
+			],
+			[
+				"rout",
+				"routing\tstatement"
+			],
+			[
+				"conn",
+				"connect\tfunction"
+			],
+			[
+				"Da",
+				"DataSet\tclass"
+			],
+			[
+				"edge",
+				"edge_update"
+			],
+			[
+				"inpu",
+				"input_shape"
+			],
+			[
+				"e",
+				"evaluate_records"
+			],
+			[
+				"tf",
+				"tfrecords"
+			],
+			[
+				"upda",
+				"update_rsq_op"
+			],
+			[
+				"ax",
+				"ax_main\tstatement"
+			],
+			[
+				"nex",
+				"nextPort"
+			],
+			[
+				"next",
+				"nextNode"
+			],
+			[
+				"edges",
+				"edges_data\tstatement"
+			],
+			[
+				"sub",
+				"subparsers"
+			],
+			[
+				"tra",
+				"traffic"
+			],
+			[
+				"delay",
+				"delay_mean\tstatement"
+			],
+			[
+				"traffic",
+				"traffic_mean"
+			],
+			[
+				"defa",
+				"default_values\tstatement"
+			],
+			[
+				"predic",
+				"predict_params\tstatement"
+			],
+			[
+				"pred",
+				"predict_params"
+			],
+			[
+				"predict",
+				"predict_count"
+			],
+			[
+				"predi",
+				"predict_params"
+			],
+			[
+				"pre",
+				"predictions\tstatement"
+			],
+			[
+				"node",
+				"node_count"
+			],
+			[
+				"global",
+				"global_step\tstatement"
+			],
+			[
+				"model",
+				"model_dir"
+			],
+			[
+				"eva",
+				"evaluate_samples\tstatement"
+			],
+			[
+				"ll",
+				"llista_final\tstatement"
+			],
+			[
+				"llsi",
+				"llista_numeros\tstatement"
+			],
+			[
+				"llist",
+				"llista_numeros\tstatement"
+			],
+			[
+				"lli",
+				"llista_numeros"
+			],
+			[
+				"li",
+				"list\tclass"
+			],
+			[
+				"m",
+				"matident\tstatement"
+			],
+			[
+				"temp",
+				"tempK\tstatement"
+			],
+			[
+				"te",
+				"tempK\tstatement"
+			],
+			[
+				"boun",
+				"bounded_paths_pool\tstatement"
+			],
+			[
+				"bo",
+				"boudedHash"
+			],
+			[
+				"SP",
+				"SPlenMatrix"
+			],
+			[
+				"real",
+				"real_path\tstatement"
+			],
+			[
+				"pa",
+				"pathHash\tstatement"
+			],
+			[
+				"add_",
+				"add_edges\tfunction"
+			],
+			[
+				"add_ver",
+				"add_vertices\tfunction"
+			],
+			[
+				"total",
+				"total_elements\tstatement"
+			],
+			[
+				"count",
+				"count_pairs"
+			],
+			[
+				"eleme",
+				"elements_with_rule\tstatement"
+			],
+			[
+				"elem",
+				"elements_with_rule\tstatement"
+			],
+			[
+				"sup",
+				"supconf\tparam"
+			],
+			[
+				"resul",
+				"result_terms\tstatement"
+			],
+			[
+				"res",
+				"result_terms\tstatement"
+			],
+			[
+				"tot",
+				"total_length\tstatement"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Client/arduino-app/src/app/auth/auth.service.ts",
+			"settings":
+			{
+				"buffer_size": 1366,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Client/arduino-app/src/app/auth/register/register.page.ts",
+			"settings":
+			{
+				"buffer_size": 546,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Client/arduino-app/src/app/auth/user.ts",
+			"settings":
+			{
+				"buffer_size": 67,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Anaconda Python Builder",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Anaconda Python Builder",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				],
+				[
+					"Packages/User/python3.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/python3.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 124.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"inted",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"int",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"in",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"Package Control: ena",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 461.0
+	},
+	"console":
+	{
+		"height": 194.0,
+		"history":
+		[
+			"view.encoding()"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/sergi/ArduinoServer",
+		"/home/sergi/ArduinoServer/Client",
+		"/home/sergi/ArduinoServer/Client/arduino-app",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app"
+	],
+	"file_history":
+	[
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/auth/user.ts",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/auth/auth-response.ts",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/auth/auth.module.ts",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/auth/register/register.page.html",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/app.module.ts",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/app-routing.module.ts",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/login/login.component.html",
+		"/home/sergi/ArduinoServer/Client/arduino-app/src/app/app.component.html",
+		"/home/sergi/ArduinoServer/Server/main.py",
+		"/home/sergi/ArduinoServer/Server/auth.py",
+		"/home/sergi/ArduinoServer/Client/index.html",
+		"/home/sergi/ArduinoServer/Client/templates/login.html",
+		"/home/sergi/ArduinoServer/Server/__init__.py",
+		"/home/sergi/ArduinoServer/Client/arduino/src/app/home/home.page.scss",
+		"/home/sergi/ArduinoServer/Client/arduino/src/app/app-routing.module.ts",
+		"/home/sergi/ArduinoServer/Client/arduino/src/app/home/home.page.html",
+		"/home/sergi/ArduinoServer/Server/models.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/Task 2/app.py",
+		"/home/sergi/ArduinoServer/Client/arduino/src/app/app.component.html",
+		"/home/sergi/ArduinoServer/models.py",
+		"/home/sergi/ArduinoServer/main.py",
+		"/home/sergi/ArduinoServer/run.py",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/views.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/Task 1/parse_and_ingest.py",
+		"/home/sergi/Downloads/.all/privat/Xat de WhatsApp amb Nat.txt",
+		"/home/sergi/Documents/Test/ops_engineer_test _/Task 2/database/models.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/Task 2/database/db.py",
+		"/home/sergi/Documents/Test/wideeyes/deadlock.java",
+		"/home/sergi/Documents/Test/Opportunity/events/readme.txt",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/__init__.py",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/add_event.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/home.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/update_event.html",
+		"/home/sergi/Documents/Test/Opportunity/events/locale/es/LC_MESSAGES/django.po",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/all_event.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/base.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/subscription.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/signup.html",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/tests.py",
+		"/home/sergi/Documents/Test/Opportunity/events/signup/views.py",
+		"/home/sergi/Documents/Test/Opportunity/events/signup/signup.html",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/models.py",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/forms.py",
+		"/home/sergi/Documents/Test/Opportunity/events/events/settings.py",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/admin.py",
+		"/home/sergi/Documents/Test/Opportunity/events/events/urls.py",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/locale/es/LC_MESSAGES/django.po",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/urls.py",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/events_confirm_delete.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/nav_bar.html",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/locale/es/LC_MESSAGES/django.mo",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/delete.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/event.html",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/registration/login.html",
+		"/home/sergi/Documents/Test/Opportunity/events/signup/urls.py",
+		"/home/sergi/Documents/Test/Opportunity/events/static/style.css",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/registration/logout.html",
+		"/home/sergi/Documents/Test/Opportunity/events/eventboard/apps.py",
+		"/home/sergi/Documents/Test/Opportunity/events/signup/apps.py",
+		"/home/sergi/Documents/Test/Opportunity/events/Templates/login.html",
+		"/home/sergi/Documents/Test/Opportunity/events/login/views.py",
+		"/home/sergi/Documents/Test/Opportunity/events/login/urls.py",
+		"/home/sergi/Documents/Test/Opportunity/events/login/models.py",
+		"/home/sergi/Documents/Test/Opportunity/events/login/signup.html",
+		"/home/sergi/Documents/Test/Opportunity/events/urls.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/requirements.txt",
+		"/home/sergi/Documents/Test/BMAT_Test_Sergi_Carol_Bosch/ops_engineer_test _/Task 1/parse_and_ingest.py",
+		"/home/sergi/.cache/.fr-mi6V55/ops_engineer_test _/Task 1/parse_and_ingest.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/Readme.rst",
+		"/home/sergi/Documents/Test/ops_engineer_test _/Task 1/db_works_test.csv",
+		"/home/sergi/Documents/Test/ops_engineer_test _/app.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/database/db.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/mongo_api.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/templates/search.html",
+		"/home/sergi/Documents/Test/ops_engineer_test _/static/index.css",
+		"/home/sergi/Documents/Test/ops_engineer_test _/iswc_searcher.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/parse_and_ingest.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/database/models.py",
+		"/home/sergi/Documents/Test/ops_engineer_test _/db_works_test.csv",
+		"/home/sergi/.config/sublime-text-3/Packages/User/Anaconda.sublime-settings",
+		"/home/sergi/Documents/Test/test.py",
+		"/tmp/mozilla_sergi0/test.py",
+		"/home/sergi/.steam/steam/steamapps/compatdata/242920/pfx/drive_c/users/steamuser/My Documents/Paradox Interactive/Hearts of Iron IV/settings.txt",
+		"/home/sergi/.steam/steam/steamapps/compatdata/242920/pfx/drive_c/users/steamuser/My Documents/Paradox Interactive/Hearts of Iron IV/save games/FRA_1941_01_01_24.hoi4",
+		"/home/sergi/Master/Q3/ASM/LABS/02/ais_analysis.R",
+		"/home/sergi/.steam/steam/steamapps/compatdata/242920/pfx/drive_c/users/steamuser/My Documents/Paradox Interactive/Hearts of Iron IV/save games/autosave.hoi4",
+		"/home/sergi/Master/Q3/ASM/LABS/02/analysis.R",
+		"/home/sergi/prova.c",
+		"/home/sergi/Downloads/gog_ftl_advanced_edition_2.0.0.2.sh",
+		"/home/sergi/.steam/steam/steamapps/compatdata/238960/pfx/drive_c/users/steamuser/My Documents/My Games/Path of Exile/production_Config.ini",
+		"/home/sergi/Downloads/Ecchi/EcchiSensei-D10+11_Final_compressed/EcchiSensei-D10+11_Final/EcchiSensei.sh",
+		"/home/sergi/.cache/.fr-QVzCSG/DMreadme.txt",
+		"/home/sergi/Documents/1 - normal interview",
+		"/home/sergi/Master/Q3/IR/LAB5/lab5.py",
+		"/home/sergi/Master/Q3/IR/LAB2/rocchio.py",
+		"/home/sergi/Documents/routenet/net2vec/convert.py",
+		"/home/sergi/Documents/routenet/net2vec/routenet.py",
+		"/home/sergi/Documents/routenet/net2vec/eager_eval.py",
+		"/home/sergi/Master/Q3/IR/LAB3/PageRank.py",
+		"/home/sergi/Downloads/Games/fc-pregmod-pregmod-master/README.md",
+		"/home/sergi/Documents/CV/Awesome/resume.tex",
+		"/home/sergi/Master/TFM/routing/routenet.py",
+		"/home/sergi/Master/TFM/routing/eager_eval.py",
+		"/home/sergi/Master/TFM/routing/run.sh",
+		"/home/sergi/Downloads/TODO",
+		"/home/sergi/Master/TFM/Delivery/RouteNet-Benchmark/Code/routenet.py",
+		"/home/sergi/Master/TFM/Delivery/Code/run.sh",
+		"/home/sergi/Master/TFM/Delivery/Code/README.md",
+		"/home/sergi/Documents/Paper/net2vec/README.md",
+		"/home/sergi/Master/TFM/Delivery/Code/NetSimRouting.py",
+		"/home/sergi/Master/TFM/Delivery/Code/cdf.py",
+		"/home/sergi/Master/TFM/Delivery/Code/eager_eval.py",
+		"/home/sergi/Master/TFM/Delivery/Code/convert.py",
+		"/home/sergi/Master/TFM/Delivery/Code/Utils/create_folders.sh",
+		"/home/sergi/Master/TFM/Delivery/Code/Utils/requirements.txt",
+		"/home/sergi/Master/TFM/routing/NetSimRouting.py",
+		"/run/user/1000/gvfs/sftp:host=enologa.ccaba.upc.edu/home/scarol/GNN/cdf.py",
+		"/home/sergi/Documents/Paper/routenet/convert.py",
+		"/home/sergi/Documents/Paper/routenet/routenet.py",
+		"/home/sergi/Documents/Paper/routenet/cdf.py",
+		"/home/sergi/Documents/Paper/routenet/eager_eval.py",
+		"/home/sergi/Documents/Paper/routenet/Utils/create_folders.sh",
+		"/home/sergi/Documents/Paper/routenet/Utils/normalize.py",
+		"/home/sergi/Documents/Paper/routenet/run.sh",
+		"/run/user/1000/gvfs/sftp:host=enologa.ccaba.upc.edu/home/scarol/GNN/routenet.py",
+		"/home/sergi/Master/TFM/routing/cdf.py",
+		"/run/user/1000/gvfs/sftp:host=enologa.ccaba.upc.edu/home/scarol/GNN/eager_eval.py",
+		"/run/user/1000/gvfs/sftp:host=enologa.ccaba.upc.edu/home/scarol/GNN/run.sh"
+	],
+	"find":
+	{
+		"height": 30.0
+	},
+	"find_in_files":
+	{
+		"height": 161.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"corre",
+			"cony",
+			"toca",
+			"toquet",
+			"mastu",
+			"tet",
+			"polla",
+			"semen",
+			"trobo",
+			"resource2",
+			"resource1",
+			"label",
+			"events_confirm_delete.html",
+			"ExtraContext",
+			"ExtraContent",
+			"User",
+			"\"\"",
+			"modify_event"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Client/arduino-app/src/app/auth/auth.service.ts",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1366,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								436,
+								436
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/TypeScript/TypeScript.tmLanguage",
+							"typescript_plugin_format_options":
+							{
+								"convertTabsToSpaces": false,
+								"indentSize": 4,
+								"tabSize": 4
+							},
+							"use_tab_stops": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"file": "Client/arduino-app/src/app/auth/register/register.page.ts",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 546,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								546,
+								546
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/TypeScript/TypeScript.tmLanguage",
+							"typescript_plugin_format_options":
+							{
+								"convertTabsToSpaces": false,
+								"indentSize": 4,
+								"tabSize": 4
+							},
+							"use_tab_stops": false
+						},
+						"translation.x": 2.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Client/arduino-app/src/app/auth/user.ts",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 67,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/TypeScript/TypeScript.tmLanguage",
+							"use_tab_stops": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 30.0
+	},
+	"input":
+	{
+		"height": 82.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.523898010774,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.doc":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 299.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 120.0
+	},
+	"pinned_build_system": "Packages/User/python3.sublime-build",
+	"project": "arduino.sublime-project",
+	"replace":
+	{
+		"height": 56.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 354.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 374.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 325.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
