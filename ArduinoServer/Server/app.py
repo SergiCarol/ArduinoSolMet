@@ -1,9 +1,12 @@
-from flask import Blueprint
-from flask import request, logging
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import os
 
 
-api = Blueprint('main', __name__)  # Needs to be moved into a separate file
-
+app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 @api.route('/')
 def index():
