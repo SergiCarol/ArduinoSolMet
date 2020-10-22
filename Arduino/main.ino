@@ -156,7 +156,7 @@ void sendData(data sensor_data) {
     doc["water_electrodes"] = sensor_data.water_electrodes;
     doc["water_ph"] = sensor_data.water_ph;
     doc["api_key"] = api_key;
-    doc["uid"] = readUID();
+    //doc["uid"] = readUID();
 
     // Begin connection
     Serial.println("Attempting to establish connection");
