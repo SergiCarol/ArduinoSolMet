@@ -60,7 +60,6 @@ void setup() {
         Serial.println("No WIFI info in EEPROM");
         while (!createAP())
             ;
-        //    WIFIGetInfo(); Fibracat_07171 9fac828a71
         WIFIStoreInfo(ssid, pwd);
         WIFILoadInfo();
     }
@@ -81,7 +80,7 @@ void setup() {
 void loop() {
     data sensor_data;
     // Wait a few seconds between measurements.
-    delay(2000);
+    delay(10000);
 
     temp_hum result = readTempHum();
 
@@ -126,7 +125,7 @@ void clearEEPROM(void) {
         EEPROM.write(i, 0);
     }
 }
-
+/*
 void initServerConnection(void){
     Serial.println("Initializing Server Connection");
     Serial.println("Using API KEY= " + api_key);
@@ -147,7 +146,7 @@ void initServerConnection(void){
             currentLine += c;  // add it to the end of the currentLine
         }
 }
-
+*/
 void sendData(data sensor_data) {
     // Set data to be sent
     doc["temperature"] = sensor_data.temperature;
@@ -155,8 +154,7 @@ void sendData(data sensor_data) {
     doc["water_temperature"] = sensor_data.water_temp;
     doc["water_electrodes"] = sensor_data.water_electrodes;
     doc["water_ph"] = sensor_data.water_ph;
-    doc["api_key"] = api_key;
-    //doc["uid"] = readUID();
+    doc["api_key"] = readUID();
 
     // Begin connection
     Serial.println("Attempting to establish connection");
@@ -285,7 +283,7 @@ void writeUID(String UID){
         EEPROM.write(addr, UID[addr - 100]);
     }
 }
-
+/*
 void printWifiData() {
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
@@ -296,7 +294,7 @@ void printWifiData() {
     Serial.println(ip);
     Serial.println(WiFi.status());
 }
-
+*/
 bool createAP(void) {
     bool wait_for_cinnection = true;
     String tmp_ssid;
@@ -370,7 +368,7 @@ bool createAP(void) {
                                             tmp_pwd)) {
                             return (false);
                         } else {
-                            initServerConnection();
+                            writeUID(api_key);
                             return (true);
                         }
                     }

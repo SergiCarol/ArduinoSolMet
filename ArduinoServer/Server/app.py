@@ -13,16 +13,12 @@ SQLALCHEMY_DATABASE_URI = "postgresql:///arduino"
 client = connect('arduino_data')
 db = SQLAlchemy(api)
 
-@api.route('/')
-def index():
-    return 'Hello'
 
 @api.route('/register', methods=['POST'])
-def register():
+def registe_user():
     email = request.args.get('email')
     password = request.args.get('password')
-    api_key = secrets.token_urlsafe(16)
-  
+    api_key = secrets.token_urlsafe(32)
     try:
         user = User(
             email=email,
@@ -36,7 +32,7 @@ def register():
 	    return(str(e))
 
 @api.route("/login", methods=['POST'])
-def login():
+def login_user():
     email = request.args.get('email')
     password = request.args.get('password')
     try:
@@ -47,14 +43,28 @@ def login():
     except Exception as e:
 	    return(str(e))
 
+@api.route('/register_arduino', methods=['POST'])
+def register_arduino():
+    api_key = secrets.token_urlsafe(32)
+    request.args.get('password')
+    user = _get_user(api_key)
+    if user == False :
+        return False
+    arduino = Arduino(
+        api_key=api_key,
+        arduino_name = request.args.get('arduino_name'),
+        user = user
+    )
+    db.session.add(arduino)
+    db.session.commit()
+    return api_key
+
 @api.route('/upload', methods=['GET', 'POST'])
 def upload():
     print("Receiving data", request.args)
     key = request.args.get('api_key')
-    user = User.query.filter_by(api_key=key)
-    if len(user) == 0:
+    if not _get_arduino(key):
         return "not_logged"
-    # Delete previous entry if it exists
     try:
         client.deleteOne({"api_key": key})
     except:
@@ -66,9 +76,20 @@ def upload():
 @api.route('/get', methods=['GET', 'POST'])
 def get_data():
     key = request.args.get('api_key')
-    user = User.query.filter_by(api_key=key)
-    if len(user) == 0:
-        return "not_logged"
+    if not _get_user(key):
+        return False
     record = Data(api_key=key)
     print("Getting record ", record)
     return record, 200
+
+def _get_user(api_key):
+    user = User.query.filter_by(api_key=api_key)
+    if len(user) == 0:
+        return False
+    return user[0]
+
+def _get_arduino(api_key):
+    arduino = Arduino.query.filter_by(api_key=api_key)
+    if len(arduino) == 0:
+        return False
+    return arduino[0]

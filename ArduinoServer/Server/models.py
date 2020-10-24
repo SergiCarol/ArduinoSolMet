@@ -5,14 +5,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    api_key = db.Column(db.String(1000))
-    
+    api_key = db.Column(db.String(1000), unique=True)
+
     def __repr__(self):
         return '<email {}>'.format(self.email)
 
 class Arduino(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    arduino_id = db.Column(db.String(100), unique=True)
+    api_key = db.Column(db.String(1000), unique=True)
+    arduino_name = db.Column(db.String(100))
     user = db.relationship('User', backref='email', lazy=True)
 
 class Data(Document):
