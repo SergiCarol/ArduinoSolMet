@@ -1,5 +1,7 @@
-from .app import db
+from flask_sqlalchemy import SQLAlchemy
 from mongoengine import *
+
+db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

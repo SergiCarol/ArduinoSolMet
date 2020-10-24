@@ -1,20 +1,17 @@
 from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
 import os
+from models import db
 from mongoengine import connect
-from models import User, Arduino, Data
 import secrets
 
-
-api = Flask(__name__)
-api.config.from_object(os.environ['APP_SETTINGS'])
-api.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app = Flask(__name__)
+db.init_app(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 SQLALCHEMY_DATABASE_URI = "postgresql:///arduino"
 client = connect('arduino_data')
-db = SQLAlchemy(api)
 
 
-@api.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST'])
 def registe_user():
     email = request.args.get('email')
     password = request.args.get('password')
@@ -31,7 +28,7 @@ def registe_user():
     except Exception as e:
 	    return(str(e))
 
-@api.route("/login", methods=['POST'])
+@app.route("/login", methods=['POST'])
 def login_user():
     email = request.args.get('email')
     password = request.args.get('password')
@@ -43,7 +40,7 @@ def login_user():
     except Exception as e:
 	    return(str(e))
 
-@api.route('/register_arduino', methods=['POST'])
+@app.route('/register_arduino', methods=['POST'])
 def register_arduino():
     api_key = secrets.token_urlsafe(32)
     request.args.get('password')
@@ -59,7 +56,7 @@ def register_arduino():
     db.session.commit()
     return api_key
 
-@api.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
     print("Receiving data", request.args)
     key = request.args.get('api_key')
@@ -73,7 +70,7 @@ def upload():
     record.save()
     return "ok", 200
 
-@api.route('/get', methods=['GET', 'POST'])
+@app.route('/get', methods=['GET', 'POST'])
 def get_data():
     key = request.args.get('api_key')
     if not _get_user(key):
