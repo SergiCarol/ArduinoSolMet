@@ -182,12 +182,12 @@ float readElectrodes(void) {
     float averageVoltage = 0,tdsValue = 0,temperature = 25;
 
     for (int i = 0; i < 10; i++) {
-        buf[i] = analogRead(ElectrodesPin);
+        analogBuffer[i] = analogRead(ElectrodesPin);
         delay(10);
     }
     avgValue = 0;
     for (int i = 0; i < 10; i++) {
-        avgValue += buf[i];
+        avgValue += analogBuffer[i];
     }
     avgValue = avgValue / 10;
     averageVoltage =  avgValue * (float)VREF/ 1024.0;
@@ -275,10 +275,14 @@ String readUID(void){
   for (uint8_t addr = 100; addr < 100 + UID_LENGTH; addr++) {
         tmp_uid[addr - 100] = EEPROM.read(addr);
     }
+    Serial.print("Reading api key: ");
+    Serial.println(tmp_uid);
     return(tmp_uid);
 }
 
 void writeUID(String UID){
+    Serial.print("Writting api key: ");
+    Serial.println(UID);
   for (uint8_t addr = 100; addr < 100 + UID_LENGTH + 2; addr++) {
         EEPROM.write(addr, UID[addr - 100]);
     }

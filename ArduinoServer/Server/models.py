@@ -1,9 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
+from app import app
 from mongoengine import *
 
-db = SQLAlchemy()
+db = SQLAlchemy(app)
 
 class User(db.Model):
+    __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
@@ -13,10 +16,23 @@ class User(db.Model):
         return '<email {}>'.format(self.email)
 
 class Arduino(db.Model):
+    __tablename__ = 'arduino'
+
     id = db.Column(db.Integer, primary_key=True)
     api_key = db.Column(db.String(1000), unique=True)
     arduino_name = db.Column(db.String(100))
-    user = db.relationship('User', backref='email', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref='user', lazy=True)
+
+class Schedule(db.Model):
+    __tablename__ = 'services'
+    id = db.Column(db.Integer, primary_key=True)
+    service = db.Column(db.String(100))
+    start_time = db.Column(db.Time())
+    end_time = db.Column(db.Time())
+    arduino_id = db.Column(db.Integer, db.ForeignKey('arduino.id'))
+    arduino = db.relationship('Arduino', backref='arduino', lazy=True)
+
 
 class Data(Document):
     temperature = FloatField(required=True)
