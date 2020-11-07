@@ -3,6 +3,7 @@ from app import app
 from mongoengine import *
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class User(db.Model):
     __tablename__ = 'user'

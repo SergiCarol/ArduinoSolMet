@@ -38,8 +38,8 @@ def login_user():
     email = request.args.get('email')
     password = request.args.get('password')
     try:
-        user = User.query.filter_by(email=email, password=password)
-        if len(user) == 1:
+        user = User.query.filter_by(email=email, password=password).first()
+        if user is not None:
             return user.api_key, 200
         return "False", 404
     except Exception as e:
