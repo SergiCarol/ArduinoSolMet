@@ -29,7 +29,7 @@ def registe_user():
         )
         db.session.add(user)
         db.session.commit()
-        return api_key, 200
+        return api_key
     except Exception as e:
 	    return(str(e)), 404
 
@@ -37,36 +37,45 @@ def registe_user():
 def login_user():
     email = request.args.get('email')
     password = request.args.get('password')
+    api_key = request.form.get('api_key')
+    if api_key is not None:
+        user = User.query.filter_by(api_key=api_key).first()
+        return api_key
     try:
         user = User.query.filter_by(email=email, password=password).first()
+        print(user)
         if user is not None:
-            return user.api_key, 200
-        return "False", 404
+            return user.api_key
+        return "False"
     except Exception as e:
-	    return(str(e)), 404
+	    return(str(e))
 
 @app.route('/register_arduino', methods=['POST'])
 def register_arduino():
-    api_key = secrets.token_urlsafe(32)
-    request.args.get('password')
+    api_key = request.form.get('api_key')
     user = _get_user(api_key)
     if user == False :
-        return "False", 404
-    arduino = Arduino(
-        api_key=api_key,
-        arduino_name = request.args.get('arduino_name'),
-        user = user
-    )
-    db.session.add(arduino)
-    db.session.commit()
-    return api_key, 200
+        return "False"
+    try:
+        arduino_key = secrets.token_urlsafe(32)
+        arduino = Arduino(
+            api_key=api_key,
+            arduino_name = request.form.get('arduino_name'),
+            user = user
+        )
+        print("New arduino added", arduino)
+        db.session.add(arduino)
+        db.session.commit()
+    except Exception as e:
+        return "False"
+    return arduino_key
 
 @app.route('/upload', methods=['GET'])
 def upload():
     print("Receiving data", request.args)
     key = request.args.get('api_key')
     if not _get_arduino(key):
-        return "not_logged", 404
+        return "not_logged"
     try:
         client.deleteOne({"api_key": key})
     except:
@@ -87,19 +96,19 @@ def upload():
 def get_data():
     user_key = request.args.get('api_key')
     if not _get_user(user_key):
-        return "False", 404
+        return "False"
     
     key = request.args.get('arduino_key')
 
     record = Data(api_key=key)
     print("Getting record ", record)
-    return record, 200
+    return record
 
 @app.route('/set_service', methods=['POST'])
 def set_service():
     key = request.args.get('api_key')
     if not _get_user(key):
-        return "False", 404
+        return "False"
     
     key = request.args.get('arduino_key')
 
@@ -121,18 +130,18 @@ def set_service():
         )
         db.session.add(user)
         db.session.commit()
-        return "ok", 202
+        return "ok"
     except Exception as e:
-	    return(str(e)), 404
+	    return(str(e))
 
 def _get_user(api_key):
     user = User.query.filter_by(api_key=api_key).first()
     if user is None:
         return False
-    return user[0]
+    return user
 
 def _get_arduino(api_key):
     arduino = Arduino.query.filter_by(api_key=api_key).first()
     if arduino is None:
         return False
-    return arduino[0]
+    return arduino
