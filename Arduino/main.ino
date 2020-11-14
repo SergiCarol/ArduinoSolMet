@@ -1,9 +1,11 @@
+#include <ArduinoHttpClient.h>
 #include <ArduinoJson.h>
 #include <DHT.h>
 #include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <OneWire.h>
 #include <WiFiNINA.h>
+#include <stdbool.h>
 // DIGITAL PORTS PINS INFO
 #define DHTPIN 2        // Digital pin connected to the DHT sensor
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
@@ -11,10 +13,16 @@
 #define SensorPin 0     // pH meter Analog output to Arduino Analog Input 0
 #define ElectrodesPin 1 // Electrodes Analog input of arduino
 #define VREF 5.0
+#define water_pump_1 4
+#define water_pump_2 5
+#define fan 6
+#define fan_2 7
+#define air_pump 8
 // INTERNET CONNECTION INFO
 #define PORT 5000
 #define MAX_RETRY 5
 #define UID_LENGTH 16
+
 IPAddress ip(192, 168, 1, 125);
 IPAddress server(192, 168, 1, 36);
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
@@ -51,7 +59,11 @@ void setup() {
     sensors.begin();
     pinMode(SensorPin, INPUT);
     pinMode(ElectrodesPin, INPUT);
-
+    pinMode(water_pump_1, OUTPUT);
+    pinMode(water_pump_2, OUTPUT);
+    pinMode(fan, OUTPUT);
+    pinMode(fan_2, OUTPUT);
+    pinMode(air_pump, OUTPUT);
     clearEEPROM();
     WIFILoadInfo();
 
@@ -158,21 +170,34 @@ void sendData(data sensor_data) {
 
     // Begin connection
     Serial.println("Attempting to establish connection");
+    WiFiClient wifi;
+    HttpClient client = HttpClient(wifi, server, PORT);
+    String contentType = "application/json";
+    String postData = "";
+    serializeJson(doc, postData);
+    Serial.println(postData);
+    client.post("/upload", contentType, postData);
+    int statusCode = client.responseStatusCode();
+    String response = client.responseBody();
 
-    if (client.connect(server, PORT)) {
-        Serial.println("connected");
-        client.println("POST / HTTP/1.1");
-        client.println("Connection: close");
-        client.print("Content-Length: ");
-        client.println(measureJson(doc));
-        client.println("Content-Type: application/json");
-        // Terminate headers with a blank line
-        client.println();
-        // Send JSON document in body
-        serializeJson(doc, client);
-        serializeJson(doc, Serial);
-    }
+    Serial.print("Status code: ");
+    Serial.println(statusCode);
+    Serial.print("Response: ");
+    Serial.println(response);
+    
+    readResponse(response);
+
 }
+
+void readResponse(String response){
+    DynamicJsonDocument services(2048);
+    deserializeJson(services, response);
+
+    digitalWrite(water_pump_1, services["water_pump_1"] | false);
+    digitalWrite(water_pump_2, services["water_pump_2"] | false);
+    digitalWrite(fan, services["fan"] | false);
+    digitalWrite(fan_2, services["fan_2"] | false);
+    digitalWrite(air_pump, services["air_pump"] | false);
 
 float readElectrodes(void) {
     int analogBuffer[10], tmp;

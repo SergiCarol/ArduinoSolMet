@@ -1,10 +1,10 @@
 import requests
 import sqlite3
-
+from datetime import datetime, timedelta 
 
 conn = sqlite3.connect('DB/test.db')
 c = conn.cursor()
-
+"""
 register = requests.post('http://127.0.0.1:5000/register',
                          data = {
                              'email':'sergicarol35@gmail.com',
@@ -37,3 +37,15 @@ register_arduino_fail = requests.post('http://127.0.0.1:5000/register_arduino',
                                  })
 res = c.execute("SELECT * FROM arduino WHERE api_key = ?", ("sadijfosfd", ))
 print("Is arduino registered correctly", res.fetchone())
+"""
+ser_service = requests.post('http://localhost:5000/set_service',
+                                 data={
+                                    'api_key': "r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ",
+                                    'arduino_key': "r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ",
+                                    'service_name': "water_pump_2",
+                                    'start_time': (datetime.now() -  timedelta(hours = 4)).isoformat(),
+                                    'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat()
+                                 })
+print("Server response", ser_service)
+res = c.execute("SELECT * FROM services")
+print("Is service registered correctly", res.fetchone())
