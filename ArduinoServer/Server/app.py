@@ -1,14 +1,16 @@
 from flask import Flask, request, jsonify
 from mongoengine import connect
+from flask_cors import CORS
 import os
 import secrets
 import datetime
 import pytz
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
 from models import db, User, Arduino, Schedule, Data
-
+CORS(app)
 db.init_app(app)
 
 client = connect('arduino_data')
@@ -18,37 +20,43 @@ SERVICE_OPTIONS = ['water_pump_1', 'water_pump_2', 'fan',
 
 @app.route('/register', methods=['POST'])
 def registe_user():
-    email = request.args.get('email')
-    password = request.args.get('password')
+    email = request.json.get('email')
+    password = request.json.get('password')
     api_key = secrets.token_urlsafe(32)
+    print(email, password)
     try:
         user = User(
             email=email,
             password=password,
             api_key=api_key
         )
+        print(user)
         db.session.add(user)
         db.session.commit()
-        return api_key
+        print(api_key)
+        return jsonify({'api_key': api_key})
     except Exception as e:
-	    return(str(e)), 404
+        print(str(e))
+        return "False"
 
 @app.route("/login", methods=['POST'])
 def login_user():
-    email = request.args.get('email')
-    password = request.args.get('password')
-    api_key = request.form.get('api_key')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    api_key = request.json.get('api_key')
+    print(email, password)
     if api_key is not None:
         user = User.query.filter_by(api_key=api_key).first()
-        return api_key
+        return jsonify({'api_key': api_key})
     try:
         user = User.query.filter_by(email=email, password=password).first()
-        print(user)
+        print(user.api_key)
         if user is not None:
-            return user.api_key
+            return jsonify({'api_key': api_key})
         return "False"
     except Exception as e:
-	    return(str(e))
+        print(str(e))
+        return "False"
 
 @app.route('/register_arduino', methods=['POST'])
 def register_arduino():
@@ -83,7 +91,7 @@ def upload():
     record = Data(**request.json)
     #record.save()
     services = Schedule.query.filter_by(arduino=_get_user(key))
-    
+
     service_json = dict()
     now = datetime.datetime.now().hour
 
@@ -97,7 +105,7 @@ def get_data():
     user_key = request.args.get('api_key')
     if not _get_user(user_key):
         return "False"
-    
+
     key = request.args.get('arduino_key')
 
     record = Data(api_key=key)
@@ -110,13 +118,13 @@ def set_service():
     key = request.form.get('api_key')
     if not _get_user(key):
         return "False"
-    
+
     key = request.form.get('arduino_key')
 
     service_name = request.form.get('service_name')
     if service_name not in SERVICE_OPTIONS:
         print("No service")
-        return "Service not found", 
+        return "Service not found",
     start_time = request.form.get('start_time')
     end_time = request.form.get('end_time')
 

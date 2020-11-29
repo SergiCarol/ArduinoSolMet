@@ -13,15 +13,15 @@ import { AuthResponse } from  './auth-response';
   providedIn: 'root'
 })
 export class AuthService {
-  AUTH_SERVER_ADDRESS:  string  =  'http://localhost:5000';
+  AUTH_SERVER_ADDRESS:  string  =  'http://127.0.01:5000';
   authSubject  =  new  BehaviorSubject(false);
 
   constructor(private  httpClient:  HttpClient, private  storage:  Storage) { }
   register(user: User): Observable<AuthResponse> {
     return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/register`, user).pipe(
       tap(async (res:  AuthResponse ) => {
-
         if (res) {
+          console.log(res);
           await this.storage.set("ACCESS_TOKEN", res.api_key);
           this.authSubject.next(true);
         }
@@ -33,7 +33,8 @@ export class AuthService {
   login(user: User): Observable<AuthResponse> {
     return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}/login`, user).pipe(
       tap(async (res: AuthResponse) => {
-
+        console.log("Trying to log in");
+        console.log(res);
         if (res.api_key) {
           await this.storage.set("ACCESS_TOKEN", res.api_key);
           this.authSubject.next(true);

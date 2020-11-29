@@ -1,6 +1,7 @@
 #include <ArduinoHttpClient.h>
 #include <ArduinoJson.h>
 #include <DHT.h>
+#include <avr/wdt.h>
 #include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <OneWire.h>
@@ -14,17 +15,19 @@
 #define ElectrodesPin 1 // Electrodes Analog input of arduino
 #define VREF 5.0
 #define water_pump_1 4
-#define water_pump_2 5
+#define air_pump 5
 #define fan 6
-#define fan_2 7
-#define air_pump 8
+#define extractor 7
+#define water_heater 8
+#define lights 9
+
 // INTERNET CONNECTION INFO
 #define PORT 5000
-#define MAX_RETRY 5
+#define MAX_RETRY 1
 #define UID_LENGTH 16
 
 IPAddress ip(192, 168, 1, 125);
-IPAddress server(192, 168, 1, 36);
+IPAddress server(192, 168, 43, 109);
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
 String ssid;
 String pwd;
@@ -32,7 +35,6 @@ String api_key = "123456789";
 const int capacity = JSON_OBJECT_SIZE(7);
 StaticJsonDocument<capacity> doc;
 WiFiClient client;
-WiFiServer ap(80);
 
 // Define struct for temperature and humidity readings
 typedef struct {
@@ -51,70 +53,19 @@ typedef struct {
 DHT dht(DHTPIN, DHTTYPE);
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
+String readUID(void);
 
-void setup() {
-    Serial.begin(9600);
-    // Start sensor modules
-    dht.begin();
-    sensors.begin();
-    pinMode(SensorPin, INPUT);
-    pinMode(ElectrodesPin, INPUT);
-    pinMode(water_pump_1, OUTPUT);
-    pinMode(water_pump_2, OUTPUT);
-    pinMode(fan, OUTPUT);
-    pinMode(fan_2, OUTPUT);
-    pinMode(air_pump, OUTPUT);
-    clearEEPROM();
-    WIFILoadInfo();
-
-    // Check if network info is stored in EEPROM
-    if ((ssid.length() == 0) || (pwd.length() == 0)) {
-        Serial.println("No WIFI info in EEPROM");
-        while (!createAP())
-            ;
-        WIFIStoreInfo(ssid, pwd);
-        WIFILoadInfo();
-    }
-
-    Serial.print("Connecting to network SSID: ");
-    Serial.println(ssid);
-    Serial.print("Password: ");
-    Serial.println(pwd);
-    if (!connectNetwork(ssid, pwd)) {
-        while (createAP())
-            ;
-    }
-    Serial.println("You're connected to the network");
-    WiFi.config(ip); 
-    // printWifiData();
+void reboot() {
+  wdt_disable();
+  wdt_enable(WDTO_15MS);
+  while (1) {}
 }
 
-void loop() {
-    data sensor_data;
-    // Wait a few seconds between measurements.
-    delay(10000);
-
-    temp_hum result = readTempHum();
-
-    // Check if any reads failed and exit early (to try again).
-    if (isnan(result.temperature) || isnan(result.humidity)) {
-        Serial.println(F("Failed to read from sensor!"));
-        return;
-    }
-
-    sensor_data.temperature = result.temperature;
-    sensor_data.humidity = result.humidity;
-    sensor_data.water_temp = readWaterTemp();
-    sensor_data.water_electrodes = readElectrodes();
-    sensor_data.water_ph = readPH();
-
-    sendData(sensor_data);
-}
 
 bool connectNetwork(String network_ssid, String network_pwd) {
     for (uint8_t retry = 0; retry < MAX_RETRY; retry++) {
-      char ssid_[32];
-      char pwd_[64];
+        char ssid_[32];
+        char pwd_[64];
         Serial.print("Attempting to connect to WEP network, SSID: ");
         Serial.println(network_ssid);
         network_ssid.toCharArray(ssid_, 32);
@@ -126,6 +77,7 @@ bool connectNetwork(String network_ssid, String network_pwd) {
         if (status == WL_CONNECTED) {
             ssid = network_ssid;
             pwd = network_pwd;
+            Serial.println("Connected!");
             return (true);
         }
     }
@@ -137,28 +89,7 @@ void clearEEPROM(void) {
         EEPROM.write(i, 0);
     }
 }
-/*
-void initServerConnection(void){
-    Serial.println("Initializing Server Connection");
-    Serial.println("Using API KEY= " + api_key);
-    client.connect(server, PORT);
-    client.println("GET /add?api_key=" + api_key + "HTTP/1.0");
-    client.println();
-    Serial.println("Connection successful, awaiting response from server");
-    String currentLine = "";
-     while (client.connected()) {   // loop while the client's connected
-        if (client.available()) {  // if there's bytes to read from the
-                                           // client,
-        char c = client.read();  // read a byte, then
-        Serial.write(c);         // print it out the serial monitor
 
-        if (c == '\n') {
-            currentLine = "";
-        } else if (c != '\r') { 
-            currentLine += c;  // add it to the end of the currentLine
-        }
-}
-*/
 void sendData(data sensor_data) {
     // Set data to be sent
     doc["temperature"] = sensor_data.temperature;
@@ -186,18 +117,20 @@ void sendData(data sensor_data) {
     Serial.println(response);
     
     readResponse(response);
-
 }
 
 void readResponse(String response){
     DynamicJsonDocument services(2048);
     deserializeJson(services, response);
 
-    digitalWrite(water_pump_1, services["water_pump_1"] | false);
-    digitalWrite(water_pump_2, services["water_pump_2"] | false);
-    digitalWrite(fan, services["fan"] | false);
-    digitalWrite(fan_2, services["fan_2"] | false);
-    digitalWrite(air_pump, services["air_pump"] | false);
+    digitalWrite(water_pump_1, !services["water_pump_1"] | true);
+    digitalWrite(air_pump, !services["air_pump"] | true);
+    digitalWrite(fan, !services["fan"] | true);
+    digitalWrite(extractor, !services["extractor"] | true);
+    digitalWrite(water_heater, !services["water_heater"] | true);
+    digitalWrite(lights, !services["lights"] | true);
+
+}
 
 float readElectrodes(void) {
     int analogBuffer[10], tmp;
@@ -267,6 +200,110 @@ float readPH(void) {
     return (3.5 * phValue);  // convert the millivolt into pH value
 }
 
+
+bool createAP(void) {
+    String tmp_ssid;
+    String tmp_pwd;
+
+    status = WiFi.beginAP("ArduinoAP");
+    if (status != WL_AP_LISTENING) {
+        Serial.println("Creating access point failed");
+        // don't continue
+        while (true)
+            ;
+    }
+
+    // wait 10 seconds for connection:
+    delay(10000);
+
+    // start the web server on port 80
+    WiFiServer ap(80);
+
+    ap.begin();
+    IPAddress ip;  // the IP address of your board
+    ip = WiFi.localIP();
+    Serial.println(ip);
+    Serial.println("Waiting for client");
+    delay(1000);
+    while (true) {
+        WiFiClient client = ap.available();  // listen for incoming clients
+        client.flush();
+        if (client.connected()) {
+            Serial.println(
+                "new client");  // print a message out the serial port
+            String currentLine = "";  // make a String to hold incoming data from the client
+            Serial.println(client.status());
+            while (client.connected()) {   // loop while the client's connected
+                if (client.available()) {  // if there's bytes to read from the
+                                           // client,
+                    char c = client.read();  // read a byte, then
+                    Serial.write(c);         // print it out the serial monitor
+                    if (c == '\n') {
+                        if (currentLine.length() == 0) {
+                        Serial.println("End of communication");
+                        client.println("HTTP/1.1 200 OK");
+                        client.println("Content-type:text/html");
+                        client.println();
+                        client.println();
+                        delay(500);
+                        client.flush(); 
+                        client.stop();
+
+                        WiFi.disconnect();
+                        if (!connectNetwork(tmp_ssid,
+                                            tmp_pwd)) {
+                            return (false);
+                        } else {
+                            writeUID(api_key);
+                            return (true);
+                        }
+                    }
+                    else {
+                        currentLine = "";
+                    }
+                    } else if (c != '\r') {  // if you got anything else but a
+                                             // carriage return character,
+                        
+                        currentLine +=
+                            c;  // add it to the end of the currentLine
+                    }
+                    // http://192.168.1.4/?ssid=NOM_SSID&?pwd=NOM_PWD!
+                    if (currentLine.startsWith("GET /?ssid=") &&
+                        currentLine.endsWith("HTTP/1.1")) {
+                        Serial.println(currentLine);
+                        uint8_t start_ssid = currentLine.indexOf("?ssid=");
+                        uint8_t end_ssid = currentLine.indexOf('&');
+                        tmp_ssid = 
+                            currentLine.substring(start_ssid + 6, end_ssid);
+                        currentLine = currentLine.substring(end_ssid + 1);
+                        
+                        Serial.println(currentLine);
+
+                        uint8_t start_pwd = currentLine.indexOf("?pwd=");
+                        uint8_t end_pwd = currentLine.indexOf('&');
+                        tmp_pwd =
+                            currentLine.substring(start_pwd + 5, end_pwd);
+                        currentLine = currentLine.substring(end_pwd + 1);
+                        Serial.println(currentLine);
+                        uint8_t start_api = currentLine.indexOf("?api=");
+                        uint8_t end_api = currentLine.indexOf('!');
+                        api_key =
+                            currentLine.substring(start_pwd + 5, end_pwd);
+
+                        Serial.print("SSID value = ");
+                        Serial.println(tmp_ssid);
+                        Serial.print("PWD value = ");
+                        Serial.println(tmp_pwd);
+                        Serial.print("API KEY value = ");
+                        Serial.println(api_key);
+                        }
+                    
+                }
+            }
+        }
+    }
+}
+
 void WIFILoadInfo(void) {
     uint8_t ssid_length = EEPROM.read(1);
     uint8_t pwd_length = EEPROM.read(32);
@@ -312,97 +349,72 @@ void writeUID(String UID){
         EEPROM.write(addr, UID[addr - 100]);
     }
 }
-/*
-void printWifiData() {
-    Serial.print("SSID: ");
-    Serial.println(WiFi.SSID());
 
-    // print your board's IP address:
-    IPAddress ip = WiFi.localIP();
-    Serial.print("IP Address: ");
-    Serial.println(ip);
-    Serial.println(WiFi.status());
-}
-*/
-bool createAP(void) {
-    bool wait_for_cinnection = true;
-    String tmp_ssid;
-    String tmp_pwd;
 
-    status = WiFi.beginAP("ArduinoAP");
-    if (status != WL_AP_LISTENING) {
-        Serial.println("Creating access point failed");
-        // don't continue
-        while (true)
-            ;
+void setup() {
+    Serial.begin(9600);
+    // Start sensor modules
+    dht.begin();
+    sensors.begin();
+    pinMode(SensorPin, INPUT);
+    pinMode(ElectrodesPin, INPUT);
+    pinMode(ElectrodesPin, INPUT);
+    pinMode(water_pump_1, OUTPUT);
+    pinMode(air_pump, OUTPUT);
+    pinMode(fan, OUTPUT);
+    pinMode(extractor, OUTPUT);
+    pinMode(water_heater, OUTPUT);
+    pinMode(lights, OUTPUT);
+    //clearEEPROM();
+    //WIFILoadInfo();
+
+    digitalWrite(water_pump_1,  true);
+    digitalWrite(air_pump,  true);
+    digitalWrite(fan,  true);
+    digitalWrite(extractor,  true);
+    digitalWrite(water_heater,  true);
+    digitalWrite(lights,  true);
+
+    //  Check if network info is stored in EEPROM
+    if ((ssid.length() == 0) || (pwd.length() == 0)) {
+        Serial.println("No WIFI info in EEPROM");
+        while (!createAP());
+        WIFIStoreInfo(ssid, pwd);
+        WIFILoadInfo();
     }
-
-    // wait 10 seconds for connection:
-    delay(10000);
-
-    // start the web server on port 80
-    ap.begin();
-    IPAddress ip;  // the IP address of your board
-    ip = WiFi.localIP();
-    Serial.println(ip);
-    Serial.println("Waiting for client");
-    delay(1000);
-    while (wait_for_cinnection) {
-        WiFiClient client = ap.available();  // listen for incoming clients
-        if (client) {
-            Serial.println(
-                "new client");  // print a message out the serial port
-            String currentLine =
-                "";  // make a String to hold incoming data from the client
-            while (client.connected()) {   // loop while the client's connected
-                if (client.available()) {  // if there's bytes to read from the
-                                           // client,
-                    char c = client.read();  // read a byte, then
-                    Serial.write(c);         // print it out the serial monitor
-                    if (c == '\n') {
-                        currentLine = "";
-                    } else if (c != '\r') {  // if you got anything else but a
-                                             // carriage return character,
-                        currentLine +=
-                            c;  // add it to the end of the currentLine
-                    }
-                    // http://192.168.1.4/?ssid=NOM_SSID&?pwd=NOM_PWD!
-                    if (currentLine.startsWith("GET /?ssid=") &&
-                        currentLine.endsWith("HTTP/1.1")) {
-                        Serial.println(currentLine);
-                        uint8_t start_ssid = currentLine.indexOf("?ssid=");
-                        uint8_t end_ssid = currentLine.indexOf('&');
-                        tmp_ssid = 
-                            currentLine.substring(start_ssid + 6, end_ssid);
-                        currentLine = currentLine.substring(end_ssid);
-                        uint8_t start_pwd = currentLine.indexOf("?pwd=");
-                        uint8_t end_pwd = currentLine.indexOf('&');
-                        tmp_pwd =
-                            currentLine.substring(start_pwd + 5, end_pwd);
-                        currentLine = currentLine.substring(end_pwd);
-                        uint8_t start_api = currentLine.indexOf("?api=");
-                        uint8_t end_api = currentLine.indexOf('!');
-                        api_key =
-                            currentLine.substring(start_pwd + 5, end_pwd);
-
-                        Serial.print("SSID value = ");
-                        Serial.println(tmp_ssid);
-                        Serial.print("PWD value = ");
-                        Serial.println(tmp_pwd);
-                        Serial.print("API KEY value = ");
-                        Serial.println(api_key);
-                        client.stop();
-                        WiFi.disconnect();
-                        if (!connectNetwork(tmp_ssid,
-                                            tmp_pwd)) {
-                            return (false);
-                        } else {
-                            writeUID(api_key);
-                            return (true);
-                        }
-                    }
-                }
-            }
+    else{
+        Serial.print("Connecting to network SSID: ");
+        Serial.println(ssid);
+        Serial.print("Password: ");
+        Serial.println(pwd);
+        if (!connectNetwork(ssid, pwd)) {
+            while (createAP())
+                ;
         }
     }
+    Serial.println("You're connected to the network");
+    WiFi.config(ip); 
+    // printWifiData();
+
+}
+
+void loop() {
+    data sensor_data;
+    // Wait a few seconds between measurements.
+    delay(10000);
+
+    temp_hum result = readTempHum();
+
+    // Check if any reads failed and exit early (to try again).
+    if (isnan(result.temperature) || isnan(result.humidity)) {
+        Serial.println(F("Failed to read from sensor!"));
+    }
+
+    sensor_data.temperature = result.temperature;
+    sensor_data.humidity = result.humidity;
+    sensor_data.water_temp = readWaterTemp();
+    sensor_data.water_electrodes = readElectrodes();
+    sensor_data.water_ph = readPH();
+
+    sendData(sensor_data);
 }

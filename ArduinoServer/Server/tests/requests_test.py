@@ -2,8 +2,15 @@ import requests
 import sqlite3
 from datetime import datetime, timedelta 
 
-conn = sqlite3.connect('DB/test.db')
-c = conn.cursor()
+#conn = sqlite3.connect('DB/test.db')
+#c = conn.cursor()
+
+#192, 168, 1, 125
+
+#requests.get('http://192.168.4.1/?ssid=JAZZTEL_Ut6&?pwd=fn9gn5v5b273&?api=r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ!')
+requests.get('http://192.168.4.1/?ssid=AndroidAP_9061&?pwd=4c47806fb28d&?api=r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ!')
+
+
 """
 register = requests.post('http://127.0.0.1:5000/register',
                          data = {
@@ -37,7 +44,7 @@ register_arduino_fail = requests.post('http://127.0.0.1:5000/register_arduino',
                                  })
 res = c.execute("SELECT * FROM arduino WHERE api_key = ?", ("sadijfosfd", ))
 print("Is arduino registered correctly", res.fetchone())
-"""
+
 ser_service = requests.post('http://localhost:5000/set_service',
                                  data={
                                     'api_key': "r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ",
@@ -49,3 +56,4 @@ ser_service = requests.post('http://localhost:5000/set_service',
 print("Server response", ser_service)
 res = c.execute("SELECT * FROM services")
 print("Is service registered correctly", res.fetchone())
+"""
