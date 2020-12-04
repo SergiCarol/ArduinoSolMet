@@ -1,19 +1,19 @@
 from flask import Flask, request, jsonify
 from mongoengine import connect
-#from flask_cors import CORS
-from flask_migrate import Migrate
+from flask_cors import CORS
+#from flask_migrate import Migrate
 import os
 import secrets
 import datetime
 import pytz
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
 from models import db, User, Arduino, Schedule, Data
-#CORS(app)
+CORS(app)
 db.init_app(app)
-migrate = Migrate(app, db)
+#migrate = Migrate(app, db)
 client = connect('arduino_data')
 
 SERVICE_OPTIONS = ['water_pump_1', 'water_pump_2', 'fan',
@@ -46,7 +46,6 @@ def login_user():
     email = request.json.get('email')
     password = request.json.get('password')
     api_key = request.json.get('api_key')
-    print(email, password, request)
     if api_key is not None:
         user = User.query.filter_by(api_key=api_key).first()
         return jsonify({'api_key': api_key})
@@ -63,7 +62,6 @@ def login_user():
 def register_arduino():
     api_key = request.json.get('api_key')
     user = _get_user(api_key)
-    print(user)
     if user == False :
         return "False"
     try:
@@ -73,7 +71,6 @@ def register_arduino():
             arduino_name = request.json.get('arduino_name'),
             user = user
         )
-        print("New arduino added", arduino)
         db.session.add(arduino)
         db.session.commit()
     except Exception as e:
@@ -117,7 +114,6 @@ def get_data():
 
 @app.route('/set_service', methods=['POST'])
 def set_service():
-    print(request.json)
     key = request.json.get('api_key')
     if not _get_user(key):
         return "False"
@@ -161,6 +157,46 @@ def set_service():
             return "ok"
         except Exception as e:
             return "Error"
+
+@app.route('/get_arduinos', methods=['GET'])
+def get_arduinos():
+    key = request.args.get('api_key')
+    user = _get_user(key)
+    if not user:
+        return "False"
+    arduinos = Arduino.query.filter_by(user_id=user.id)
+    payload = []
+    for arduino in arduinos:
+        data = {
+            'name': arduino.arduino_name,
+            'id': arduino.id,
+            'api_key': arduino.api_key
+        }
+        payload.append(data)
+    return jsonify({'arduino': payload})
+
+@app.route('/get_services', methods=['GET'])
+def get_services():
+    key = request.args.get('api_key')
+    if not _get_user(key):
+        return "False"
+
+    key = request.args.get('arduino_key')
+    arduino = _get_arduino(key)
+
+    services = Schedule.query.filter_by(arduino_id=arduino.id)
+    
+    payload = []
+    for service in services:
+        data = {
+            'name': service.service,
+            'start_time': service.start_time,
+            'end_time': service.end_time,
+            'active': service.active,
+            'id': service.id
+        }
+        payload.append(data)
+    return jsonify({'arduino': payload})
 
 def _get_user(api_key):
     user = User.query.filter_by(api_key=api_key).first()

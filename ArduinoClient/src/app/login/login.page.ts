@@ -15,7 +15,8 @@ export class LoginPage implements OnInit {
 
   login(form){
     this.authService.login(form.value).subscribe((res)=>{
-      this.router.navigateByUrl('home');
+      localStorage.setItem('api_key', res.api_key);
+      this.router.navigate(['home'], {state: res});
     });
   }
 }

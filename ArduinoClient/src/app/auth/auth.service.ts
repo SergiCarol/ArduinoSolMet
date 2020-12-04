@@ -24,6 +24,7 @@ export class AuthService {
           console.log(res);
           await this.storage.set("ACCESS_TOKEN", res.api_key);
           this.authSubject.next(true);
+          return res;
         }
       })
 
@@ -33,11 +34,10 @@ export class AuthService {
   login(user: User): Observable<AuthResponse> {
     return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}/login`, user).pipe(
       tap(async (res: AuthResponse) => {
-        console.log("Trying to log in");
-        console.log(res);
         if (res.api_key) {
           await this.storage.set("ACCESS_TOKEN", res.api_key);
           this.authSubject.next(true);
+          return res;
         }
       })
     );
@@ -48,6 +48,6 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return this.storage.get("ACCESS_TOKEN");
+    return localStorage.getItem('api_key');
   }
 }

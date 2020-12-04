@@ -1,5 +1,6 @@
 import requests
 import sqlite3
+import time
 from datetime import datetime, timedelta 
 
 conn = sqlite3.connect('DB/test.db')
@@ -22,6 +23,7 @@ print(new_api_key)
 exit()
 """
 new_api_key = "eSVorisNYFLZA2WzXAoTt3M5ViAoAK28IKwLknK5s1Y"
+"""
 login = requests.post('http://127.0.0.1:5000/login',
                        json = {
                            'email':'sergicarol35@gmail.com',
@@ -32,7 +34,7 @@ login = requests.post('http://127.0.0.1:5000/login',
                        json = {
                            'api_key': new_api_key})
 print("Does key exist", login.json()['api_key'])
-"""
+
 register_arduino = requests.post('http://127.0.0.1:5000/register_arduino',
                                  json={
                                     'api_key': new_api_key,
@@ -44,6 +46,7 @@ print("Is arduino registered correctly", res.fetchone())
 exit()
 """
 arduino_key = "xsaRhdxt6otlpsFkWNK99plKUZu-dOccMTCbgQSMQmk"
+"""
 register_arduino_fail = requests.post('http://127.0.0.1:5000/register_arduino',
                                  json={
                                     'api_key': "sadijfosfd",
@@ -74,3 +77,16 @@ ser_service = requests.post('http://localhost:5000/set_service',
 print("Server response", ser_service.text)
 res = c.execute("SELECT * FROM services")
 print("Is service registered correctly", res.fetchone())
+"""
+services = requests.get('http://localhost:5000/get_services',
+                                 {
+                                    'api_key': new_api_key,
+                                    'arduino_key': arduino_key
+                                 })
+print(services.text)
+time.sleep(2)
+services = requests.get('http://localhost:5000/get_arduinos',
+                                 {
+                                    'api_key': new_api_key,
+                                 })
+print(services.text)
