@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>    
+    </ion-buttons>
+    <ion-title>Sensors Data</ion-title>
+    <ion-buttons slot="end" (click)="goRegister()">
+      <ion-icon slot="icon-only"  name="add-outline"></ion-icon>    
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<div>{{Temperature}}</div>
+{{Humidity}}
+{{WaterTemp}}
+{{WaterPH}}
+{{WaterElectrodes}}
+</ion-content>

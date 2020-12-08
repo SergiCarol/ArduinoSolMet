@@ -6,13 +6,15 @@ import { AuthService } from '../auth/auth.service';
 import { AuthResponse } from  '../auth/auth-response';
 import { Arduinos } from  './arduinos';
 import { ArduinoData } from  './arduino-data';
-
+import { Services, Service } from  './services';
 import { Storage } from  '@ionic/storage';
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class ConnectService {
-  SERVER_ADDRESS:  string  =  'http://127.0.01:5000';
+  SERVER_ADDRESS:  string  =  'http://127.0.0.1:5000';
   constructor(private  httpClient:  HttpClient, private  storage:  Storage) { }
 
   getArduinos(user: AuthResponse): Observable<Arduinos>{
@@ -45,4 +47,56 @@ export class ConnectService {
     )
   }
 
+  getServices(api_key: string, arduino_key:string): Observable<Services>{
+    let params = new HttpParams();
+
+    params = params.append('api_key', api_key);
+    params = params.append('arduino_key', arduino_key);
+
+    return this.httpClient.get<Services>(`${this.SERVER_ADDRESS}/get_services`,{params: params}).pipe(
+      tap(async (res:  Services ) => {
+        if (res) {
+          console.log("Services", res);
+          return res;
+        }
+      })
+    )
+  }
+
+  updateService(api_key: string, arduino_key:string, service: Service){
+    let payload = {
+      api_key: api_key,
+      arduino_key: arduino_key,
+      service_name: service.name,
+      service_id: service.id,
+      start_time: service.start_time,
+      end_time: service.end_time,
+      active: service.active
+    }
+    return this.httpClient.post(`${this.SERVER_ADDRESS}/set_service`, payload).pipe(
+      tap(async (res: string) => {
+        console.log(res);
+        return res;
+      })
+    );
+  }
+
+  registerArduino(api_key: string, arduino_name: string): Observable<any>{
+    let payload = {
+      api_key: api_key,
+      arduino_name: arduino_name
+    }
+    console.log("Adding new arduino with payload", payload)
+    return this.httpClient.post<any>(`${this.SERVER_ADDRESS}/register_arduino`, payload).pipe(
+      tap(async (res ) => {
+        console.log("Register Arduinio: ", res);
+
+        if (res) {
+          console.log("Register Arduinio: ", res);
+          return res;
+        }
+      })
+    )
+
+  }
 }

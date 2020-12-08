@@ -1,7 +1,12 @@
+<head>
+  <title>Font Awesome Icons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Arduinos List
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +14,22 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Arduinos List</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ng-container *ngIf="arduinos">
+    <ion-list >
+      <ion-item *ngFor="let arduino of arduinos.arduino"  lines="inset">
+        <div (click)="select(arduino)">
+        <ion-label>{{arduino.name}}</ion-label>
+        </div>
+        <ion-button slot="end" color="secondary" (click)="editArduino(arduino)">
+            Edit
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </ng-container>
   </div>
 </ion-content>

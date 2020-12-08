@@ -1,15 +1,17 @@
 from flask import Flask, request, jsonify
 from mongoengine import connect
 from flask_cors import CORS
+from bson import json_util
 #from flask_migrate import Migrate
 import os
 import secrets
 import datetime
 import pytz
+import json
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
 from models import db, User, Arduino, Schedule, Data
 CORS(app)
 db.init_app(app)
@@ -25,7 +27,6 @@ def registe_user():
     email = request.json.get('email')
     password = request.json.get('password')
     api_key = secrets.token_urlsafe(32)
-    print(email, password)
     try:
         user = User(
             email=email,
@@ -43,12 +44,13 @@ def registe_user():
 
 @app.route("/login", methods=['POST'])
 def login_user():
+    print(request.json)
     email = request.json.get('email')
     password = request.json.get('password')
     api_key = request.json.get('api_key')
     if api_key is not None:
         user = User.query.filter_by(api_key=api_key).first()
-        return jsonify({'api_key': api_key})
+        return jsonify({'api_key': user.api_key})
     try:
         user = User.query.filter_by(email=email, password=password).first()
         if user is not None:
@@ -89,7 +91,7 @@ def upload():
     except:
         pass
     record = Data(**request.json)
-    #record.save()
+    record.save()
     services = Schedule.query.filter_by(arduino=_get_user(key))
 
     service_json = dict()
@@ -108,9 +110,18 @@ def get_data():
 
     key = request.args.get('arduino_key')
 
-    record = Data(api_key=key)
-    print("Getting record ", record)
-    return record
+    record = Data.objects(api_key=key)[0]
+    if record.temperature is not None:
+        data = {
+            'temperature': record.temperature,
+            'humidity': record.humidity,
+            'water_temp': record.water_temperature,
+            'water_ph': record.water_ph,
+            'water_electrodes': record.water_electrodes
+        }
+    else: 
+        data = {}
+    return jsonify(data)
 
 @app.route('/set_service', methods=['POST'])
 def set_service():
@@ -118,27 +129,28 @@ def set_service():
     if not _get_user(key):
         return "False"
 
-    key = request.json.get('arduino_key')
+    arduino_key = request.json.get('arduino_key')
+    service_id = request.json.get('service_id')
 
     service_name = request.json.get('service_name')
     if service_name not in SERVICE_OPTIONS:
-        print("No service")
-        return "Service not found",
+        return "Service not found"
+
     start_time = request.json.get('start_time')
     end_time = request.json.get('end_time')
-    if start_time:
-        start_time = datetime.datetime.fromisoformat(start_time)
-        end_time = datetime.datetime.fromisoformat(end_time)
-        print(type(start_time), type(end_time))
+    
+    start_time = datetime.datetime.fromisoformat(start_time)
+    end_time = datetime.datetime.fromisoformat(end_time)
+
+    active = request.json.get('active')
+    service = Schedule.query.filter_by(id=service_id).first()
+
+    if service is not None:
         try:
-            print("Inserting new service")
-            schedule = Schedule(
-                service=service_name,
-                start_time=start_time,
-                end_time=end_time,
-                arduino=_get_arduino(key)
-            )
-            db.session.add(schedule)
+            print("Updating  service")
+            service.start_time = start_time
+            service.end_time=end_time,
+            service.active=active,
             db.session.commit()
             return "ok"
         except Exception as e:
@@ -149,8 +161,10 @@ def set_service():
             print("Inserting new service")
             schedule = Schedule(
                 service=service_name,
-                active=True,
-                arduino=_get_arduino(key)
+                start_time=start_time,
+                end_time=end_time,
+                arduino_id=_get_user(arduino_key),
+                active=active,
             )
             db.session.add(schedule)
             db.session.commit()
@@ -183,11 +197,13 @@ def get_services():
 
     key = request.args.get('arduino_key')
     arduino = _get_arduino(key)
-
-    services = Schedule.query.filter_by(arduino_id=arduino.id)
-    
+    print(arduino.id)
+    #services = Schedule.query.filter_by(arduino_id=arduino.id).first()
+    services = Schedule.query.all()
+    print(services)
     payload = []
     for service in services:
+        print(service.arduino_id)
         data = {
             'name': service.service,
             'start_time': service.start_time,

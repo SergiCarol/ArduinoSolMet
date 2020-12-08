@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>    
+    </ion-buttons>
+    <ion-title>arduino-services</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="serviceItems">
+
+  <IonCard *ngFor="let service of serviceItems" >
+    <IonCardHeader>
+      <IonCardTitle  *ngIf="service">{{service.name}}</IonCardTitle>
+    </IonCardHeader>
+
+    <IonCardContent>
+      <ion-list >
+        <ion-item>
+          <ion-label>Start time: HH:mm</ion-label>
+          <ion-datetime displayFormat="HH:mm"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>End time: HH:mm</ion-label>
+          <ion-datetime displayFormat="HH:mm"></ion-datetime>
+        </ion-item>
+      </ion-list>
+    </IonCardContent>
+  </IonCard>
+</ion-content>

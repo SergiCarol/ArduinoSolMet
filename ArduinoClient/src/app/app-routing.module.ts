@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -26,11 +26,15 @@ const routes: Routes = [
   {
     path: 'add-arduino-network',
     loadChildren: () => import('./add-arduino-network/add-arduino-network.module').then( m => m.AddArduinoNetworkPageModule)
+  },  {
+    path: 'arduino-data',
+    loadChildren: () => import('./arduino-data/arduino-data.module').then( m => m.ArduinoDataPageModule)
   },
   {
-    path: 'add-arduino-data',
-    loadChildren: () => import('./add-arduino-data/add-arduino-data.module').then( m => m.AddArduinoDataPageModule)
-  },
+    path: 'arduino-services',
+    loadChildren: () => import('./arduino-services/arduino-services.module').then( m => m.ArduinoServicesPageModule)
+  }
+
 ];
 
 @NgModule({

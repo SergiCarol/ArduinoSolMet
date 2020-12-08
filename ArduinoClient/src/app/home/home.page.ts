@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute } from  "@angular/router";
-import { Arduinos } from '../connector/arduinos';
+import { Arduinos, Arduino } from '../connector/arduinos';
 import { ConnectService } from '../connector/connect.service';
 import { AuthService } from '../auth/auth.service';
 import { AuthResponse } from  '../auth/auth-response';
@@ -11,8 +11,8 @@ import { AuthResponse } from  '../auth/auth-response';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  @Input() data: Arduinos;
-  api_key: string;
+  @Input() arduinos: Arduinos;
+  api_key: AuthResponse;
 
   constructor(
     private  connector:  ConnectService,
@@ -21,10 +21,27 @@ export class HomePage {
     private  route: ActivatedRoute) { }
 
   ngOnInit() {
-    let api_key: AuthResponse = this.router.getCurrentNavigation().extras.state as AuthResponse;
-    console.log(api_key);
-    this.connector.getArduinos(api_key).subscribe((res) =>
-      this.data = res 
+    this.api_key = this.router.getCurrentNavigation().extras.state as AuthResponse;
+    if (this.api_key == null){
+      this.api_key = {
+        api_key: this.authService.isLoggedIn()
+      };
+    }
+    this.connector.getArduinos(this.api_key).subscribe((res) =>
+      this.arduinos = res 
     );
+    console.log(this.arduinos)
+  }
+
+  select(arduino: Arduino) {
+    this.router.navigate(['arduino-data'], {state: {
+      arduino: arduino,
+      user: this.api_key}});
+  }
+
+  editArduino(arduino: Arduino) {
+    this.router.navigate(['arduino-services'], {state: {
+      arduino: arduino,
+      user: this.api_key}});
   }
 }

@@ -3,8 +3,8 @@ import sqlite3
 import time
 from datetime import datetime, timedelta 
 
-conn = sqlite3.connect('DB/test.db')
-c = conn.cursor()
+#conn = sqlite3.connect('DB/test.db')
+#c = conn.cursor()
 
 #192, 168, 1, 125
 
@@ -12,7 +12,6 @@ c = conn.cursor()
 #requests.get('http://192.168.4.1/?ssid=AndroidAP_9061&?pwd=4c47806fb28d&?api=r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ!')
 
 
-"""
 register = requests.post('http://127.0.0.1:5000/register',
                          json = {
                              'email':'sergicarol35@gmail.com',
@@ -20,10 +19,8 @@ register = requests.post('http://127.0.0.1:5000/register',
 
 new_api_key = register.json()['api_key']
 print(new_api_key)
-exit()
-"""
-new_api_key = "eSVorisNYFLZA2WzXAoTt3M5ViAoAK28IKwLknK5s1Y"
-"""
+
+
 login = requests.post('http://127.0.0.1:5000/login',
                        json = {
                            'email':'sergicarol35@gmail.com',
@@ -38,22 +35,12 @@ print("Does key exist", login.json()['api_key'])
 register_arduino = requests.post('http://127.0.0.1:5000/register_arduino',
                                  json={
                                     'api_key': new_api_key,
-                                    'arduino_name': "Test Arduino Name"
+                                    'arduino_name': "Test Arduino Name 4"
                                  })
-print(register_arduino.json()['arduino_key'])
-res = c.execute("SELECT * FROM arduino WHERE api_key = ?", (new_api_key, ))
-print("Is arduino registered correctly", res.fetchone())
-exit()
-"""
-arduino_key = "xsaRhdxt6otlpsFkWNK99plKUZu-dOccMTCbgQSMQmk"
-"""
-register_arduino_fail = requests.post('http://127.0.0.1:5000/register_arduino',
-                                 json={
-                                    'api_key': "sadijfosfd",
-                                    'arduino_name': "Test Arduino Name Fail"
-                                 })
-res = c.execute("SELECT * FROM arduino WHERE api_key = ?", ("sadijfosfd", ))
-print("Is arduino registered correctly", res.fetchone())
+                                 
+print(register_arduino.json())
+
+arduino_key = register_arduino.json()['api_key']
 
 ser_service = requests.post('http://localhost:5000/set_service',
                                  json={
@@ -64,20 +51,29 @@ ser_service = requests.post('http://localhost:5000/set_service',
                                     'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat()
                                  })
 print("Server response", ser_service.text)
-res = c.execute("SELECT * FROM services")
-print("Is service registered correctly", res.fetchone())
 
 ser_service = requests.post('http://localhost:5000/set_service',
                                  json={
                                     'api_key': new_api_key,
                                     'arduino_key': arduino_key,
                                     'service_name': "fan_2",
+                                    'start_time': (datetime.now() -  timedelta(hours = 4)).isoformat(),
+                                    'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat(),
                                     'active': True
                                  })
 print("Server response", ser_service.text)
-res = c.execute("SELECT * FROM services")
-print("Is service registered correctly", res.fetchone())
-"""
+
+#r
+ser_service = requests.post('http://localhost:5000/set_service',
+                                 json={
+                                    'api_key': new_api_key,
+                                    'arduino_key': arduino_key,
+                                    'service_name': "air_pump",
+                                    'start_time': (datetime.now() -  timedelta(hours = 4)).isoformat(),
+                                    'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat(),
+                                    'active': True
+                                 })
+print(ser_service.text)
 services = requests.get('http://localhost:5000/get_services',
                                  {
                                     'api_key': new_api_key,
