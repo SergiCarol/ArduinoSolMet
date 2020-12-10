@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'arduino-services',
     loadChildren: () => import('./arduino-services/arduino-services.module').then( m => m.ArduinoServicesPageModule)
+  },
+  {
+    path: 'add-service',
+    loadChildren: () => import('./add-service/add-service.module').then( m => m.AddServicePageModule)
   }
 
 ];

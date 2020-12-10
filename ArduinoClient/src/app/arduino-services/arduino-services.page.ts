@@ -34,6 +34,7 @@ export class ArduinoServicesPage implements OnInit {
   }
 
   updateService(service: Service) {
+    console.log("Service", service);
     this.connector.updateService(this.user.api_key, this.arduino.api_key, service).subscribe(res => {
         if (res == "ok"){
           this.presentToast('Your settings have been saved.');
@@ -43,6 +44,12 @@ export class ArduinoServicesPage implements OnInit {
           this.presentToast('An error occurred while saving');
         }
       });
+  }
+
+  addService(){
+    this.router.navigate(['add-service'], {state: {
+      arduino: this.arduino,
+      user: this.user}});
   }
 
   async presentToast(message: string) {

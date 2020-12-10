@@ -4,6 +4,9 @@
       <ion-back-button defaultHref="home"></ion-back-button>    
     </ion-buttons>
     <ion-title>arduino-services</ion-title>
+    <ion-buttons slot="end" (click)="addService()">
+      <ion-icon slot="icon-only"  name="add-outline"></ion-icon>    
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -18,11 +21,20 @@
       <ion-list >
         <ion-item>
           <ion-label>Start time: HH:mm</ion-label>
-          <ion-datetime displayFormat="HH:mm"></ion-datetime>
+          <ion-datetime displayFormat="HH:mm" [(ngModel)]="service.start_time"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-label>End time: HH:mm</ion-label>
-          <ion-datetime displayFormat="HH:mm"></ion-datetime>
+          <ion-datetime displayFormat="HH:mm" [(ngModel)]="service.end_time"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>Active: </ion-label>
+          <ion-checkbox slot="end" [(ngModel)]="service.active"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-button slot="end" color="secondary" (click)="updateService(service)">
+            Edit
+        </ion-button>
         </ion-item>
       </ion-list>
     </IonCardContent>

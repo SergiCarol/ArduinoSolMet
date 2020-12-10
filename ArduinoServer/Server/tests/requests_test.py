@@ -48,7 +48,8 @@ ser_service = requests.post('http://localhost:5000/set_service',
                                     'arduino_key': arduino_key,
                                     'service_name': "water_pump_2",
                                     'start_time': (datetime.now() -  timedelta(hours = 4)).isoformat(),
-                                    'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat()
+                                    'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat(),
+                                    'active': 'false'
                                  })
 print("Server response", ser_service.text)
 
@@ -59,7 +60,7 @@ ser_service = requests.post('http://localhost:5000/set_service',
                                     'service_name': "fan_2",
                                     'start_time': (datetime.now() -  timedelta(hours = 4)).isoformat(),
                                     'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat(),
-                                    'active': True
+                                    'active': 'true'
                                  })
 print("Server response", ser_service.text)
 
@@ -71,7 +72,7 @@ ser_service = requests.post('http://localhost:5000/set_service',
                                     'service_name': "air_pump",
                                     'start_time': (datetime.now() -  timedelta(hours = 4)).isoformat(),
                                     'end_time': (datetime.now() -  timedelta(hours = 2)).isoformat(),
-                                    'active': True
+                                    'active': 'true'
                                  })
 print(ser_service.text)
 services = requests.get('http://localhost:5000/get_services',

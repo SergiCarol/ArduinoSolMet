@@ -28,8 +28,8 @@ class Schedule(db.Model):
     __tablename__ = 'services'
     id = db.Column(db.Integer, primary_key=True)
     service = db.Column(db.String(100))
-    start_time = db.Column(db.DateTime())
-    end_time = db.Column(db.DateTime())
+    start_time = db.Column(db.String(100))
+    end_time = db.Column(db.String(100))
     active = db.Column(db.Boolean())
     arduino_id = db.Column(db.Integer, db.ForeignKey('arduino.api_key'))
     arduino = db.relationship('Arduino', backref='arduino', lazy=True)
