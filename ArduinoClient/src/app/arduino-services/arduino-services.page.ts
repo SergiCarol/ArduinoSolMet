@@ -17,6 +17,13 @@ export class ArduinoServicesPage implements OnInit {
   show: boolean = false;
   @Input() services: Services;
 
+  services_names = [
+    {name: 'Water Pump 1', value: 'water_pump_1'},
+    {name: 'Water Pump 2', value: 'water_pump_2'},
+    {name: 'Fan', value: 'fan_1'},
+    {name: 'Fan 2', value: 'fan_2'},
+    {name: 'Air Pump', value: 'air_pump'},
+  ]
   constructor(
     private  router:  Router,
     private  connector:  ConnectService,
@@ -60,5 +67,13 @@ export class ArduinoServicesPage implements OnInit {
     toast.present();
   }
   get serviceItems() {
-    return (this.services) ? this.services.arduino  : [] }
+    return (this.services) ? this.services.arduino  : [] 
+  }
+
+  getName(service: string): string{
+    for (let element of this.services_names){
+      if (element.value == service){
+        return element.name}
+    }
+  }
 }

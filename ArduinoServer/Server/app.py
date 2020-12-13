@@ -10,8 +10,8 @@ import pytz
 import json
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
 from models import db, User, Arduino, Schedule, Data
 CORS(app)
 db.init_app(app)
@@ -126,7 +126,9 @@ def get_data():
 @app.route('/set_service', methods=['POST'])
 def set_service():
     key = request.json.get('api_key')
+    print(key)
     if not _get_user(key):
+        print("no_user")
         return "False"
 
     arduino_key = request.json.get('arduino_key')
@@ -134,6 +136,7 @@ def set_service():
 
     service_name = request.json.get('service_name')
     if service_name not in SERVICE_OPTIONS:
+        print(service_name, SERVICE_OPTIONS)
         return "Service not found"
 
     start_time = request.json.get('start_time')

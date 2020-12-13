@@ -3,7 +3,7 @@ import { Arduino } from '../connector/arduinos';
 import { AuthResponse } from  '../auth/auth-response';
 import { Router } from  "@angular/router";
 import { ConnectService } from '../connector/connect.service';
-import { Services, Service } from '../connector/services';
+import { Services, Service, ServiceClass } from '../connector/services';
 
 @Component({
   selector: 'app-add-service',
@@ -13,13 +13,17 @@ import { Services, Service } from '../connector/services';
 export class AddServicePage implements OnInit {
   user: AuthResponse;
   arduino: Arduino;
-  @Input() services = {
-    'water_pump_1': 'Water Pump 1',
-    'water_pump_2': 'Water Pump 2',
-    'fan_1': 'Fan',
-    'fan_2': 'Fan 2',
-    'air_pump': 'Air Pump',
-  }
+  new_service: Service;
+
+  services = [
+    {name: 'Water Pump 1', value: 'water_pump_1'},
+    {name: 'Water Pump 2', value: 'water_pump_2'},
+    {name: 'Fan', value: 'fan_1'},
+    {name: 'Fan 2', value: 'fan_2'},
+    {name: 'Air Pump', value: 'air_pump'},
+  ]
+
+  service = new ServiceClass('', '', '', '');
 
   constructor(
     private  router:  Router,
@@ -33,13 +37,28 @@ export class AddServicePage implements OnInit {
     console.log("Arduino", this.arduino.api_key);
   }
 
-  addService(form){
-    console.log(form.value);
-    /*
-    this.connector.updateService(this.user.api_key, this.arduino.api_key, form.value).subscribe(res => {
+  addService(){
+    console.log(this.service.name);
+    let new_service = {
+      name: this.getName(this.service.name),
+      end_time: this.service.end_time,
+      start_time: this.service.start_time,
+      active: this.service.active
+    };
+   
+    console.log(new_service);
+
+    this.connector.updateService(this.user.api_key, this.arduino.api_key, new_service, true).subscribe(res => {
       this.router.navigate(['arduino-services'], {state: {
         arduino: this.arduino,
         user: this.user}});    });
-    */
-      }
+
+  }
+
+  getName(service: any): string{
+    for (let element of this.services){
+      if (element.name == service.name){
+        return element.value}
+    }
+  }
 }

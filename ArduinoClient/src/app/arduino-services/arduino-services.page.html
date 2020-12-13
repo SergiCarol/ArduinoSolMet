@@ -14,7 +14,7 @@
 
   <IonCard *ngFor="let service of serviceItems" >
     <IonCardHeader>
-      <IonCardTitle  *ngIf="service">{{service.name}}</IonCardTitle>
+      <IonCardTitle  *ngIf="service">{{getName(service.name)}}</IonCardTitle>
     </IonCardHeader>
 
     <IonCardContent>

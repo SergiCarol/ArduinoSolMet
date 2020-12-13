@@ -63,15 +63,28 @@ export class ConnectService {
     )
   }
 
-  updateService(api_key: string, arduino_key:string, service: Service){
-    let payload = {
-      api_key: api_key,
-      arduino_key: arduino_key,
-      service_name: service.name,
-      service_id: service.id,
-      start_time: service.start_time,
-      end_time: service.end_time,
-      active: service.active
+  updateService(api_key: string, arduino_key:string, service: Service, create: Boolean = false){
+    let payload = {}
+    if (create == false) {
+      payload = {
+        api_key: api_key,
+        arduino_key: arduino_key,
+        service_name: service.name,
+        service_id: service.id,
+        start_time: service.start_time,
+        end_time: service.end_time,
+        active: service.active
+      }
+    }
+    else {
+      payload = {
+        api_key: api_key,
+        arduino_key: arduino_key,
+        service_name: service.name,
+        start_time: service.start_time,
+        end_time: service.end_time,
+        active: service.active
+      }
     }
     return this.httpClient.post(`${this.SERVER_ADDRESS}/set_service`, payload).pipe(
       tap(async (res: string) => {
