@@ -44,4 +44,9 @@ export class HomePage {
       arduino: arduino,
       user: this.api_key}});
   }
+
+  addArduino() {
+    this.router.navigate(['add-arduino-network'], {state: {
+      user: this.api_key}});
+  }
 }

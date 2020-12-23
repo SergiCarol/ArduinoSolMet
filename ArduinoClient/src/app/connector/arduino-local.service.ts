@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams  } from  '@angular/common/http';
-import { Storage } from  '@ionic/storage';
 import { WifiWizard2 } from '@ionic-native/wifi-wizard-2/ngx';
 @Injectable({
   providedIn: 'root'

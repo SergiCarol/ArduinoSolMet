@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener  } from '@angular/core';
 import { Arduino } from '../connector/arduinos';
 import { AuthResponse } from  '../auth/auth-response';
-import { Router } from  "@angular/router";
+import { Router, NavigationEnd } from  "@angular/router";
 import { ConnectService } from '../connector/connect.service';
 import { Services, Service } from '../connector/services';
 import { ToastController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import { ToastController } from '@ionic/angular';
   templateUrl: './arduino-services.page.html',
   styleUrls: ['./arduino-services.page.scss'],
 })
-export class ArduinoServicesPage implements OnInit {
+export class ArduinoServicesPage implements OnInit  {
   user: AuthResponse;
   arduino: Arduino;
   show: boolean = false;
@@ -20,7 +20,7 @@ export class ArduinoServicesPage implements OnInit {
   services_names = [
     {name: 'Water Pump 1', value: 'water_pump_1'},
     {name: 'Water Pump 2', value: 'water_pump_2'},
-    {name: 'Fan', value: 'fan_1'},
+    {name: 'Fan', value: 'fan'},
     {name: 'Fan 2', value: 'fan_2'},
     {name: 'Air Pump', value: 'air_pump'},
   ]
@@ -28,7 +28,18 @@ export class ArduinoServicesPage implements OnInit {
     private  router:  Router,
     private  connector:  ConnectService,
     public toastController: ToastController
-  ) { }
+  ) { 
+    this.router.routeReuseStrategy.shouldReuseRoute = function() { return false; }
+    this.router.events.subscribe((evt) => {
+      if (evt instanceof NavigationEnd) {
+         // trick the Router into believing it's last link wasn't previously loaded
+         this.router.navigated = false;
+         // if you need to scroll back to top, here is the right place
+         window.scrollTo(0, 0);
+         this.ngOnInit()
+      }
+  });;
+    }
 
   ngOnInit() {
     this.arduino = this.router.getCurrentNavigation().extras.state.arduino as Arduino;
@@ -67,7 +78,7 @@ export class ArduinoServicesPage implements OnInit {
     toast.present();
   }
   get serviceItems() {
-    return (this.services) ? this.services.arduino  : [] 
+    return (this.services) ? this.services.arduino  : null 
   }
 
   getName(service: string): string{
@@ -76,4 +87,6 @@ export class ArduinoServicesPage implements OnInit {
         return element.name}
     }
   }
+
+
 }

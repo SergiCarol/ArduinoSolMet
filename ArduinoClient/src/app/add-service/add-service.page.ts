@@ -18,7 +18,7 @@ export class AddServicePage implements OnInit {
   services = [
     {name: 'Water Pump 1', value: 'water_pump_1'},
     {name: 'Water Pump 2', value: 'water_pump_2'},
-    {name: 'Fan', value: 'fan_1'},
+    {name: 'Fan', value: 'fan '},
     {name: 'Fan 2', value: 'fan_2'},
     {name: 'Air Pump', value: 'air_pump'},
   ]
@@ -28,7 +28,10 @@ export class AddServicePage implements OnInit {
   constructor(
     private  router:  Router,
     private  connector:  ConnectService,
-  ) { }
+  ) { 
+    this.router.routeReuseStrategy.shouldReuseRoute = function() { return false; };
+
+  }
 
   ngOnInit() {
     this.arduino = this.router.getCurrentNavigation().extras.state.arduino as Arduino;
@@ -60,5 +63,9 @@ export class AddServicePage implements OnInit {
       if (element.name == service.name){
         return element.value}
     }
+  }
+
+  goBack(){
+    this.router.navigate(['arduino-services'])
   }
 }

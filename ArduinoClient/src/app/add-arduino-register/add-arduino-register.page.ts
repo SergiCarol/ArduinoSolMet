@@ -29,9 +29,9 @@ export class AddArduinoRegisterPage implements OnInit {
   }
 
   addArduino(form){
-    console.log("Submited form", this.name);
     this.connector.registerArduino(this.user.api_key, this.name).subscribe(res =>{
-      console.log("Res", res)
+      this.router.navigate(['add-arduino-network'], {state: {
+        user: this.user}});
     });
   }
 }

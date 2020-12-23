@@ -10,8 +10,8 @@ import pytz
 import json
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
 from models import db, User, Arduino, Schedule, Data
 CORS(app)
 db.init_app(app)
@@ -159,10 +159,10 @@ def set_service():
             service.end_time=end_time,
             service.active=active,
             db.session.commit()
-            return "ok"
+            return jsonify({'status': 'ok'})
         except Exception as e:
             print(e)
-            return "Error"
+            return jsonify({'status': 'Error'})
     else:
         try:
             print("Inserting new service")
@@ -175,16 +175,16 @@ def set_service():
             )
             db.session.add(schedule)
             db.session.commit()
-            return "ok"
+            return jsonify({'status': 'ok'})
         except Exception as e:
-            return "Error"
+            return jsonify({'status': 'Error'})
 
 @app.route('/get_arduinos', methods=['GET'])
 def get_arduinos():
     key = request.args.get('api_key')
     user = _get_user(key)
     if not user:
-        return "False"
+        return jsonify({'status': 'Error'})
     arduinos = Arduino.query.filter_by(user_id=user.id)
     payload = []
     for arduino in arduinos:
@@ -200,7 +200,7 @@ def get_arduinos():
 def get_services():
     key = request.args.get('api_key')
     if not _get_user(key):
-        return "False"
+        return jsonify({'status': 'Error'})
 
     key = request.args.get('arduino_key')
     arduino = _get_arduino(key)
