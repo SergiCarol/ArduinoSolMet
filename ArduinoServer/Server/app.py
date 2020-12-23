@@ -10,8 +10,8 @@ import pytz
 import json
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Projects\\arduinosolo-webpage\\ArduinoServer\\Server\\DB\\test.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:\\Users\\Sergi\\Documents\\Arduino_Repo\\ArduinoSolMet\\ArduinoServer\\Server\\DB\\test.db'
 from models import db, User, Arduino, Schedule, Data
 CORS(app)
 db.init_app(app)
@@ -50,7 +50,7 @@ def login_user():
     api_key = request.json.get('api_key')
     if api_key is not None:
         user = User.query.filter_by(api_key=api_key).first()
-        return jsonify({'api_key': user.api_key})
+        return jsonify({'api_key': api_key})
     try:
         user = User.query.filter_by(email=email, password=password).first()
         if user is not None:
@@ -109,18 +109,20 @@ def get_data():
         return "False"
 
     key = request.args.get('arduino_key')
-
-    record = Data.objects(api_key=key)[0]
-    if record.temperature is not None:
-        data = {
-            'temperature': record.temperature,
-            'humidity': record.humidity,
-            'water_temp': record.water_temperature,
-            'water_ph': record.water_ph,
-            'water_electrodes': record.water_electrodes
-        }
-    else: 
-        data = {}
+    try:
+        record = Data.objects(api_key=key)[0]
+        if record.temperature is not None:
+            data = {
+                'temperature': record.temperature,
+                'humidity': record.humidity,
+                'water_temp': record.water_temperature,
+                'water_ph': record.water_ph,
+                'water_electrodes': record.water_electrodes
+            }
+        else: 
+            data = {}
+    except:
+        data = {'status': 'Error: no data'}
     return jsonify(data)
 
 @app.route('/set_service', methods=['POST'])
@@ -141,50 +143,52 @@ def set_service():
 
     start_time = request.json.get('start_time')
     end_time = request.json.get('end_time')
-    
-    start_time = datetime.datetime.fromisoformat(start_time)
-    end_time = datetime.datetime.fromisoformat(end_time)
+    active = request.json.get('active')
 
     print("Start time", start_time)
     print("End time", end_time)
     print("Start time", type(start_time))
     print("End time", type(end_time))
-    active = request.json.get('active')
+    print("Active", active)
+    if active:
+        active = 1
+    else:
+        active = 0
     service = Schedule.query.filter_by(id=service_id).first()
 
     if service is not None:
         try:
             print("Updating  service")
-            service.start_time = start_time
-            service.end_time=end_time,
-            service.active=active,
+            service.start_time=str(start_time)
+            service.end_time=str(end_time)
+            service.active=active
             db.session.commit()
             return jsonify({'status': 'ok'})
         except Exception as e:
             print(e)
-            return jsonify({'status': 'Error'})
+            return jsonify({'status': 'Error' + e})
     else:
-        try:
-            print("Inserting new service")
-            schedule = Schedule(
-                service=service_name,
-                start_time=start_time,
-                end_time=end_time,
-                arduino_id=_get_user(arduino_key),
-                active=active,
-            )
-            db.session.add(schedule)
-            db.session.commit()
-            return jsonify({'status': 'ok'})
-        except Exception as e:
-            return jsonify({'status': 'Error'})
+        
+        print("Inserting new service")
+        schedule = Schedule(
+            service=service_name,
+            start_time=start_time,
+            end_time=end_time,
+            arduino_id=_get_arduino(arduino_key).api_key,
+            active=active,
+        )
+        db.session.add(schedule)
+        db.session.commit()
+        return jsonify({'status': 'ok'})
+
 
 @app.route('/get_arduinos', methods=['GET'])
 def get_arduinos():
     key = request.args.get('api_key')
     user = _get_user(key)
+    print(user)
     if not user:
-        return jsonify({'status': 'Error'})
+        return jsonify({'status': 'Error: user not logged'})
     arduinos = Arduino.query.filter_by(user_id=user.id)
     payload = []
     for arduino in arduinos:
@@ -200,17 +204,21 @@ def get_arduinos():
 def get_services():
     key = request.args.get('api_key')
     if not _get_user(key):
-        return jsonify({'status': 'Error'})
+        return jsonify({'status': 'Error: not logged'})
 
     key = request.args.get('arduino_key')
     arduino = _get_arduino(key)
-    print(arduino.id)
-    #services = Schedule.query.filter_by(arduino_id=arduino.id).first()
-    services = Schedule.query.all()
-    print(services)
+    if not arduino:
+        return jsonify({'status': 'Error: Arduino does not exist'})
+    
+    services = Schedule.query.filter_by(arduino_id=arduino.api_key)
+    #services = Schedule.query.all()
+    #print(services)
+
     payload = []
     for service in services:
-        print(service.arduino_id)
+        print(service)
+        print(service.active)
         data = {
             'name': service.service,
             'start_time': service.start_time,
@@ -220,6 +228,20 @@ def get_services():
         }
         payload.append(data)
     return jsonify({'arduino': payload})
+
+
+@app.route('/delete_service', methods=['POST'])
+def delete_service():
+    key = request.json.get('api_key')
+    print(key)
+    if not _get_user(key):
+        return jsonify({'status': 'Error'})
+
+    service_id = request.json.get('service_id')
+    service = Schedule.query.filter_by(id=service_id).first()
+    db.session.delete(service)
+    db.session.commit()
+    return jsonify({'response': 'ok'})
 
 def _get_user(api_key):
     user = User.query.filter_by(api_key=api_key).first()

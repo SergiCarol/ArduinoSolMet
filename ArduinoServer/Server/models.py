@@ -30,8 +30,8 @@ class Schedule(db.Model):
     service = db.Column(db.String(100))
     start_time = db.Column(db.String(100))
     end_time = db.Column(db.String(100))
-    active = db.Column(db.Boolean())
-    arduino_id = db.Column(db.Integer, db.ForeignKey('arduino.api_key'))
+    active = db.Column(db.Integer)
+    arduino_id = db.Column(db.String(100), db.ForeignKey('arduino.api_key'))
     arduino = db.relationship('Arduino', backref='arduino', lazy=True)
 
 

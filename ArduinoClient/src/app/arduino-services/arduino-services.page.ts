@@ -54,7 +54,7 @@ export class ArduinoServicesPage implements OnInit  {
   updateService(service: Service) {
     console.log("Service", service);
     this.connector.updateService(this.user.api_key, this.arduino.api_key, service).subscribe(res => {
-        if (res == "ok"){
+        if (res.status == "ok"){
           this.presentToast('Your settings have been saved.');
         }
         else {
@@ -68,6 +68,20 @@ export class ArduinoServicesPage implements OnInit  {
     this.router.navigate(['add-service'], {state: {
       arduino: this.arduino,
       user: this.user}});
+  }
+
+  delete(service: Service){
+    console.log("Delete Service", service);
+    this.connector.deleteService(this.user.api_key, service).subscribe(res => {
+        if (res.response == "ok"){
+          this.presentToast('Your settings have been saved.');
+          this.redirectTo('/arduino-services')
+        }
+        else {
+          console.log("Received message error", res);
+          this.presentToast('An error occurred while deleting');
+        }
+      });
   }
 
   async presentToast(message: string) {
@@ -88,5 +102,8 @@ export class ArduinoServicesPage implements OnInit  {
     }
   }
 
-
+  redirectTo(uri:string){
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigate([uri]));
+ }
 }

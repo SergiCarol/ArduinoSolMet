@@ -32,6 +32,9 @@
           <ion-checkbox slot="end" [(ngModel)]="service.active"></ion-checkbox>
         </ion-item>
         <ion-item>
+          <ion-button slot="start" color="warning" (click)="delete(service)">
+            Delete
+        </ion-button>
           <ion-button slot="end" color="secondary" (click)="updateService(service)">
             Edit
         </ion-button>

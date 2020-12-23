@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ArduinoLocalService } from '../connector/arduino-local.service.service';
+import { ArduinoLocalService } from '../connector/arduino-local.service';
 import { AuthResponse } from  '../auth/auth-response';
 import { Router } from  "@angular/router";
 import { AuthService } from  '../auth/auth.service';
