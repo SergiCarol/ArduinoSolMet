@@ -1,9 +1,25 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>add_arduino_network</ion-title>
+    <ion-buttons slot="start" (click)="goBack()">
+      <ion-back-button ></ion-back-button>    
+    </ion-buttons>
+    <ion-title>Connect to System</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
+<ion-content color="primary" padding>
+  
+  <div padding>
+    <ion-item>
+      <ion-label>Network to connect: </ion-label>
+      <ion-input [(ngModel)]="current_network"  type="text" placeholder="Your netwotk name">
+    </ion-item>
+    <ion-item>
+      <ion-label>Network password</ion-label>
+      <ion-input [(ngModel)]="password"  type="password">
+    </ion-item>
+  </div>
+  <div padding>
+    <ion-button size="large" (click)="connectArduino()">Add Service</ion-button>
+  </div>
 
 </ion-content>

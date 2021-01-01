@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { WifiWizard2 } from '@ionic-native/wifi-wizard-2/ngx';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -19,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   providers: [
     StatusBar,
     SplashScreen,
+    WifiWizard2,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -12,12 +12,13 @@ export class ArduinoLocalService {
     private wifiWizard2: WifiWizard2
     ) { }
 
-  async getCurrentNetwork() {
-    return await this.wifiWizard2.getConnectedSSID()
+  getCurrentNetwork() {
+    return this.wifiWizard2.getConnectedSSID()
   }
 
   sendWifiToArduino(ssid: string, pwd: string, api_key:string) {
     let url: string = `${this.LOCAL_ADDRESS}${ssid}&?pwd=${pwd}&?api=${api_key}!`
+    console.log("Connecting to arduino: ", url);
     this.httpClient.get(url);
   }
 }

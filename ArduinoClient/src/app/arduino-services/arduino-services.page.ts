@@ -53,15 +53,17 @@ export class ArduinoServicesPage implements OnInit  {
 
   updateService(service: Service) {
     console.log("Service", service);
+    /*
     this.connector.updateService(this.user.api_key, this.arduino.api_key, service).subscribe(res => {
-        if (res.status == "ok"){
+        
+      if (res.status == "ok"){
           this.presentToast('Your settings have been saved.');
         }
         else {
           console.log("Received message error", res);
           this.presentToast('An error occurred while saving');
         }
-      });
+      });*/
   }
 
   addService(){
@@ -72,6 +74,7 @@ export class ArduinoServicesPage implements OnInit  {
 
   delete(service: Service){
     console.log("Delete Service", service);
+    /*
     this.connector.deleteService(this.user.api_key, service).subscribe(res => {
         if (res.response == "ok"){
           this.presentToast('Your settings have been saved.');
@@ -81,7 +84,7 @@ export class ArduinoServicesPage implements OnInit  {
           console.log("Received message error", res);
           this.presentToast('An error occurred while deleting');
         }
-      });
+      });*/
   }
 
   async presentToast(message: string) {
