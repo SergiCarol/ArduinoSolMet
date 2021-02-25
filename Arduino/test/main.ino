@@ -26,8 +26,8 @@
 #define MAX_RETRY 1
 #define UID_LENGTH 16
 
-IPAddress ip(192, 168, 0, 125);
-IPAddress server(192, 168, 0, 51);
+IPAddress ip(192, 168, 1, 125);
+IPAddress server(192, 168, 43, 109);
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
 String ssid;
 String pwd;
@@ -227,7 +227,7 @@ bool createAP(void) {
     delay(1000);
     while (true) {
         WiFiClient client = ap.available();  // listen for incoming clients
-        //client.flush();
+        client.flush();
         if (client.connected()) {
             Serial.println(
                 "new client");  // print a message out the serial port
@@ -366,7 +366,7 @@ void setup() {
     pinMode(water_heater, OUTPUT);
     pinMode(lights, OUTPUT);
     //clearEEPROM();
-    WIFILoadInfo();
+    //WIFILoadInfo();
 
     digitalWrite(water_pump_1,  true);
     digitalWrite(air_pump,  true);
@@ -376,6 +376,7 @@ void setup() {
     digitalWrite(lights,  true);
 
     //  Check if network info is stored in EEPROM
+    /*
     if ((ssid.length() == 0) || (pwd.length() == 0)) {
         Serial.println("No WIFI info in EEPROM");
         while (!createAP());
@@ -395,26 +396,38 @@ void setup() {
     Serial.println("You're connected to the network");
     WiFi.config(ip); 
     // printWifiData();
-
+    */
 }
 
 void loop() {
     data sensor_data;
     // Wait a few seconds between measurements.
-    delay(10000);
+    uint8_t d = Serial.read();
 
-    temp_hum result = readTempHum();
-
-    // Check if any reads failed and exit early (to try again).
-    if (isnan(result.temperature) || isnan(result.humidity)) {
-        Serial.println(F("Failed to read from sensor!"));
+    if (d == 97){
+        digitalWrite(water_pump_1,  false);
     }
-
-    sensor_data.temperature = result.temperature;
-    sensor_data.humidity = result.humidity;
-    sensor_data.water_temp = readWaterTemp();
-    sensor_data.water_electrodes = readElectrodes();
-    sensor_data.water_ph = readPH();
-
-    sendData(sensor_data);
+    if (d == 98){
+        digitalWrite(air_pump,  false);
+    }
+    if (d == 99){
+        digitalWrite(fan,  false);
+    }
+    if (d == 100){
+        digitalWrite(extractor,  false);
+    }
+    if (d == 101){
+        digitalWrite(water_heater,  false);
+    }
+    if (d == 102){
+        digitalWrite(lights,  false);
+    }
+    if (d == 103) {
+            digitalWrite(water_pump_1,  true);
+        digitalWrite(air_pump,  true);
+        digitalWrite(fan,  true);
+        digitalWrite(extractor,  true);
+        digitalWrite(water_heater,  true);
+        digitalWrite(lights,  true);
+    }
 }

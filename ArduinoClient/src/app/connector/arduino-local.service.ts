@@ -5,7 +5,7 @@ import { WifiWizard2 } from '@ionic-native/wifi-wizard-2/ngx';
   providedIn: 'root'
 })
 export class ArduinoLocalService {
-  LOCAL_ADDRESS:  string  =  'http://192.168.1.4/?ssid=';
+  LOCAL_ADDRESS:  string  =  'http://192.168.4.1/?ssid=';
 
   constructor(
     private  httpClient:  HttpClient,

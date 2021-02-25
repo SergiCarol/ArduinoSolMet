@@ -10,8 +10,9 @@ from datetime import datetime, timedelta
 
 #requests.get('http://192.168.4.1/?ssid=JAZZTEL_Ut6&?pwd=fn9gn5v5b273&?api=r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ!')
 #requests.get('http://192.168.4.1/?ssid=AndroidAP_9061&?pwd=4c47806fb28d&?api=r4GO1L6jR0srm2OXxZ5WnxI6lLC5fDM3cDHMDdgppGQ!')
+requests.get('http://192.168.1.4/?ssid=SOLMET-OFICINA&?pwd=8S4R375SIN&?api=so11zAoEGpvwDaNxO6gASqysSPXGA2Vi7p3JTx8ct5k!')
 
-
+"""
 register = requests.post('http://127.0.0.1:5000/register',
                          json = {
                              'email':'sergicarol35@gmail.com',
@@ -87,3 +88,4 @@ services = requests.get('http://localhost:5000/get_arduinos',
                                     'api_key': new_api_key,
                                  })
 print(services.text)
+"""

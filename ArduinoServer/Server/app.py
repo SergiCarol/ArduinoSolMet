@@ -21,6 +21,10 @@ client = connect('arduino_data')
 SERVICE_OPTIONS = ['water_pump_1', 'water_pump_2', 'fan',
                    'fan_2', 'air_pump']
 
+@app.route('/test', methods=['get'])
+def test():
+    return 'ok'
+
 @app.route('/register', methods=['POST'])
 def registe_user():
     print(request)
@@ -84,14 +88,17 @@ def register_arduino():
 def upload():
     print("Receiving data", request.json)
     key = request.json.get('api_key')
-    if not _get_arduino(key):
-        return "not_logged"
+    #if not _get_arduino(key):
+    #    return "not_logged"
     try:
         client.deleteOne({"api_key": key})
     except:
         pass
+    request.json['temperature'] = 1
+    request.json['humidity'] = 1
     record = Data(**request.json)
     record.save()
+    """
     services = Schedule.query.filter_by(arduino=_get_user(key))
 
     service_json = dict()
