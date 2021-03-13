@@ -8,17 +8,16 @@ import { User } from  './user';
 import { AuthResponse } from  './auth-response';
 
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  AUTH_SERVER_ADDRESS:  string  =  'http://127.0.01:5000';
+  server_url=  'http://157.230.107.10:5000';
   authSubject  =  new  BehaviorSubject(false);
 
   constructor(private  httpClient:  HttpClient, private  storage:  Storage) { }
   register(user: User): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/register`, user).pipe(
+    return this.httpClient.post<AuthResponse>(this.server_url + '/register', user).pipe(
       tap(async (res:  AuthResponse ) => {
         if (res) {
           console.log(res);
@@ -32,7 +31,7 @@ export class AuthService {
   }
 
   login(user: User): Observable<AuthResponse> {
-    return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}/login`, user).pipe(
+    return this.httpClient.post('http://157.230.107.10:5000/login', user).pipe(
       tap(async (res: AuthResponse) => {
         if (res.api_key) {
           console.log("User", res)
@@ -45,7 +44,7 @@ export class AuthService {
   }
 
   login_api(user: AuthResponse): Observable<AuthResponse> {
-    return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}/login`, user).pipe(
+    return this.httpClient.post('http:/157.230.107.10:5000/login', user).pipe(
       tap(async (res: AuthResponse) => {
         if (res.api_key) {
           this.authSubject.next(true);

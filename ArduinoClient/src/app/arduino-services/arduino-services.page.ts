@@ -53,17 +53,12 @@ export class ArduinoServicesPage implements OnInit  {
 
   updateService(service: Service) {
     console.log("Service", service);
-    /*
+
     this.connector.updateService(this.user.api_key, this.arduino.api_key, service).subscribe(res => {
-        
-      if (res.status == "ok"){
-          this.presentToast('Your settings have been saved.');
-        }
-        else {
-          console.log("Received message error", res);
-          this.presentToast('An error occurred while saving');
-        }
-      });*/
+
+      this.presentToast('Your settings have been saved.');
+
+      });
   }
 
   addService(){

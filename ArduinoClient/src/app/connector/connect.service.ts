@@ -14,13 +14,13 @@ import { Storage } from  '@ionic/storage';
 })
 
 export class ConnectService {
-  SERVER_ADDRESS:  string  =  'http://127.0.0.1:5000';
+  SERVER_ADDRESS:  string  =  'http:/157.230.107.10:5000';
   constructor(private  httpClient:  HttpClient, private  storage:  Storage) { }
 
   getArduinos(user: AuthResponse): Observable<Arduinos>{
     let params = new HttpParams().set('api_key', user.api_key)
 
-    return this.httpClient.get<Arduinos>(`${this.SERVER_ADDRESS}/get_arduinos`, {params: params}).pipe(
+    return this.httpClient.get<Arduinos>('http://157.230.107.10:5000/get_arduinos', {params: params}).pipe(
       tap(async (res:  Arduinos ) => {
         console.log(res);
         if (res) {
@@ -37,7 +37,7 @@ export class ConnectService {
     params = params.append('api_key', api_key);
     params = params.append('arduino_key', arduino_key);
 
-    return this.httpClient.get<ArduinoData>(`${this.SERVER_ADDRESS}/get`,{params: params}).pipe(
+    return this.httpClient.get<ArduinoData>('http://157.230.107.10:5000/get',{params: params}).pipe(
       tap(async (res:  ArduinoData ) => {
         if (res) {
           console.log(res);
@@ -53,7 +53,7 @@ export class ConnectService {
     params = params.append('api_key', api_key);
     params = params.append('arduino_key', arduino_key);
 
-    return this.httpClient.get<Services>(`${this.SERVER_ADDRESS}/get_services`,{params: params}).pipe(
+    return this.httpClient.get<Services>('http://157.230.107.10:5000/get_services',{params: params}).pipe(
       tap(async (res:  Services ) => {
         if (res) {
           console.log("Services", res);
@@ -86,7 +86,7 @@ export class ConnectService {
         active: service.active
       }
     }
-    return this.httpClient.post(`${this.SERVER_ADDRESS}/set_service`, payload).pipe(
+    return this.httpClient.post('http://157.230.107.10:5000/set_service', payload).pipe(
       tap(async (res: string) => {
         console.log(res);
         return res;
@@ -100,7 +100,7 @@ export class ConnectService {
       arduino_name: arduino_name
     }
     console.log("Adding new arduino with payload", payload)
-    return this.httpClient.post<any>(`${this.SERVER_ADDRESS}/register_arduino`, payload).pipe(
+    return this.httpClient.post<any>('http://157.230.107.10:5000/register_arduino', payload).pipe(
       tap(async (res ) => {
         console.log("Register Arduinio: ", res);
 
