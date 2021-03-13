@@ -2,7 +2,7 @@
 #include <ArduinoJson.h>
 #include <DHT.h>
 #include <avr/wdt.h>
-#include <DallasTemperature.h>
+#include < .h>
 #include <EEPROM.h>
 #include <OneWire.h>
 #include <WiFiNINA.h>
@@ -26,12 +26,12 @@
 #define MAX_RETRY 1
 #define UID_LENGTH 16
 
-IPAddress ip(192, 168, 0, 125);
-IPAddress server(192, 168, 0, 51);
+IPAddress ip(192, 168, 1, 125);
+IPAddress server(157, 230, 107, 10);
 int status = WL_IDLE_STATUS;  // the Wifi radio's status
-String ssid;
-String pwd;
-String api_key = "123456789";
+String ssid="Fibracat_07171";
+String pwd="9fac828a71";
+String api_key = "O0waAcEEmlRqQZBb2m69VjzpeKJCIfxzpATpfpZbI-U";
 const int capacity = JSON_OBJECT_SIZE(7);
 StaticJsonDocument<capacity> doc;
 WiFiClient client;
@@ -55,6 +55,9 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 String readUID(void);
 
+WiFiClient wifi;
+HttpClient http_client = HttpClient(wifi, "157.230.107.10", PORT);
+//HttpClient http_client = HttpClient(wifi, "192.168.1.33", PORT);
 void reboot() {
   wdt_disable();
   wdt_enable(WDTO_15MS);
@@ -97,20 +100,21 @@ void sendData(data sensor_data) {
     doc["water_temperature"] = sensor_data.water_temp;
     doc["water_electrodes"] = sensor_data.water_electrodes;
     doc["water_ph"] = sensor_data.water_ph;
-    doc["api_key"] = readUID();
+    doc["api_key"] = "O0waAcEEmlRqQZBb2m69VjzpeKJCIfxzpATpfpZbI-U";
 
     // Begin connection
     Serial.println("Attempting to establish connection");
-    WiFiClient wifi;
-    HttpClient client = HttpClient(wifi, server, PORT);
-    String contentType = "application/json";
-    String postData = "";
-    serializeJson(doc, postData);
-    Serial.println(postData);
-    client.post("/upload", contentType, postData);
-    int statusCode = client.responseStatusCode();
-    String response = client.responseBody();
 
+    String contentType = "application/x-www-form-urlencoded";
+    String postData = "";
+    String httpRequestData = "api_key=O0waAcEEmlRqQZBb2m69VjzpeKJCIfxzpATpfpZbI-U&temperature=" + String(sensor_data.temperature) + "&humidity=" + String(sensor_data.humidity)+ "&water_temperature=" + String(sensor_data.water_temp) + "&water_ph=" +  String(sensor_data.water_ph) + "&water_electrodes=" + String(sensor_data.water_electrodes) + "";
+    //serializeJson(doc, postData);
+    
+    //Serial.println(postData);
+    Serial.println(httpRequestData);
+    http_client.get("/upload?api_key=O0waAcEEmlRqQZBb2m69VjzpeKJCIfxzpATpfpZbI-U&temperature=" + String(sensor_data.temperature) + "&humidity=" + String(sensor_data.humidity)+ "&water_temperature=" + String(sensor_data.water_temp) + "&water_ph=" +  String(sensor_data.water_ph) + "&water_electrodes=" + String(sensor_data.water_electrodes) + "");
+    int statusCode = http_client.responseStatusCode();
+    String response = http_client.responseBody();
     Serial.print("Status code: ");
     Serial.println(statusCode);
     Serial.print("Response: ");
@@ -122,7 +126,7 @@ void sendData(data sensor_data) {
 void readResponse(String response){
     DynamicJsonDocument services(2048);
     deserializeJson(services, response);
-
+    Serial.println(services);
     digitalWrite(water_pump_1, !services["water_pump_1"] | true);
     digitalWrite(air_pump, !services["air_pump"] | true);
     digitalWrite(fan, !services["fan"] | true);
@@ -366,7 +370,7 @@ void setup() {
     pinMode(water_heater, OUTPUT);
     pinMode(lights, OUTPUT);
     //clearEEPROM();
-    WIFILoadInfo();
+    //WIFILoadInfo();
 
     digitalWrite(water_pump_1,  true);
     digitalWrite(air_pump,  true);
@@ -374,7 +378,7 @@ void setup() {
     digitalWrite(extractor,  true);
     digitalWrite(water_heater,  true);
     digitalWrite(lights,  true);
-
+    /*
     //  Check if network info is stored in EEPROM
     if ((ssid.length() == 0) || (pwd.length() == 0)) {
         Serial.println("No WIFI info in EEPROM");
@@ -392,16 +396,20 @@ void setup() {
                 ;
         }
     }
+    */
+    connectNetwork(ssid, pwd);
     Serial.println("You're connected to the network");
-    WiFi.config(ip); 
+    //WiFi.config(ip); 
     // printWifiData();
-
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
 }
 
 void loop() {
     data sensor_data;
     // Wait a few seconds between measurements.
-    delay(10000);
+    delay(1000);
 
     temp_hum result = readTempHum();
 
