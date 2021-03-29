@@ -2,7 +2,7 @@
 #include <ArduinoJson.h>
 #include <DHT.h>
 #include <avr/wdt.h>
-#include < .h>
+#include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <OneWire.h>
 #include <WiFiNINA.h>
@@ -126,7 +126,7 @@ void sendData(data sensor_data) {
 void readResponse(String response){
     DynamicJsonDocument services(2048);
     deserializeJson(services, response);
-    Serial.println(services);
+    Serial.println(response);
     digitalWrite(water_pump_1, !services["water_pump_1"] | true);
     digitalWrite(air_pump, !services["air_pump"] | true);
     digitalWrite(fan, !services["fan"] | true);
@@ -410,7 +410,14 @@ void loop() {
     data sensor_data;
     // Wait a few seconds between measurements.
     delay(1000);
-
+    if (client.status() != WL_CONNECTED) {
+        digitalWrite(water_pump_1,  true);
+        digitalWrite(air_pump,  true);
+        digitalWrite(fan,  true);
+        digitalWrite(extractor,  true);
+        digitalWrite(water_heater,  true);
+        digitalWrite(lights,  true);
+    }
     temp_hum result = readTempHum();
 
     // Check if any reads failed and exit early (to try again).
